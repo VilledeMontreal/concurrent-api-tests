@@ -2,18 +2,19 @@
   "name": "@villedemontreal/concurrent-api-tests",
   "version": "2.0.0",
   "description": "Provides the core functions required to implement concurrent API tests with vitest.",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "/src/**.*.js",
-    "/src/**.*d.ts"
+    "/dist/**.*.js",
+    "/dist/**.*d.ts"
   ],
   "directories": {
-    "lib": "./src"
+    "lib": "./dist"
   },
   "scripts": {
+    "open-watch-mode-no-emit-in-a-second-screen-for-fast-feedback": "tsc --noEmit --watch --pretty",
     "start": "vitest run",
-    "watch": "tsc --watch --pretty",
+    "package": "tsc",
     "lint": "villemontreal-lint . check node both",
     "lint-fix": "villemontreal-lint . fix node both",
     "prettier": "villemontreal-lint . check node prettier",
@@ -40,9 +41,10 @@
   "devDependencies": {
     "@types/chai": "4.2.19",
     "@types/lodash": "4.14.170",
+    "@types/node": "^18.0.0",
     "@villedemontreal/lint-config": "1.7.5",
     "chai": "4.3.4",
-    "typescript": "4.1.3",
+    "typescript": "^5.0.0",
     "vitest": "^2.0.0"
   },
   "dependencies": {

@@ -3,7 +3,7 @@ import assert = require('assert');
 import lodash = require('lodash');
 
 // By design, there can be only one apiTestSuite; thus, global properties are acceptable in this context.
-let testRunId: string = null;
+let testRunId: string | null = null;
 
 export function getTestRunId() {
   if (!testRunId) {
@@ -94,7 +94,7 @@ export function defineGetSharedFixtureByKey<TKey, TRootEntity>(
       map.set(key, sharedFixturePromise);
     }
 
-    return map.get(key);
+    return map.get(key)!; // We know it exists because we just set it if it wasn't there
   };
 }
 

@@ -1,10 +1,12 @@
 {
-  "extends": "./node_modules/@villedemontreal/lint-config/rules/tsconfig-base.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "pretty": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "declaration": true
+    "outDir": "dist",
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "skipLibCheck": true
   }
 }
