@@ -1,38 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import assert = require('assert');
 import lodash = require('lodash');
-import { serializeError } from 'serialize-error';
-
-const parallel = require('mocha.parallel');
 
 // By design, there can be only one apiTestSuite; thus, global properties are acceptable in this context.
 let testRunId: string = null;
-
-export function apiTestSuite(
-  testSuiteName: string,
-  estimatedTestingTime: string,
-  environment: string,
-  maxTestConcurrency: number,
-  maxRetries: number,
-  retryTimeoutInMiliseconds: number,
-  apiTests: () => void,
-  _skippedTests?: () => void
-): void {
-  parallel.limit(maxTestConcurrency);
-  parallel.maxRetries(maxRetries);
-  parallel.retryTimeoutInMiliseconds(retryTimeoutInMiliseconds);
-  const testRunLabel = getTestRunLabel(testSuiteName, estimatedTestingTime, environment, maxTestConcurrency, maxRetries, retryTimeoutInMiliseconds,getTestRunId());
-
-  console.log(testRunLabel);
-  parallel(testSuiteName, logFlakyTestsAfter(maxRetries, apiTests));
-}
-
-function logFlakyTestsAfter(maxRetries:number, apiTests:() => void){
-  return ()=>{
-    apiTests();
-    after(() => { console.log(getFlakyTestReport(maxRetries))})
-  }
-}
 
 export function getTestRunId() {
   if (!testRunId) {
@@ -127,76 +98,6 @@ export function defineGetSharedFixtureByKey<TKey, TRootEntity>(
   };
 }
 
-
 //*******************************************************************************************
 // Reporting
 //*******************************************************************************************
-interface IRetriedTestFailure {
-  specName: string;
-  testExecutionIndex: number;
-  err: any;
-}
-
-function getTestRunLabel(
-  testSuiteName: string,
-  estimatedTestingTime: string,
-  environment: string,
-  maxTestConcurrency: number,
-  maxRetries: number,
-  retryTimeoutInMiliseconds: number,  
-  testRunId: string
-) {
-  return `  ----------------------------------------------------------
-Test suite name: 
-${testSuiteName}
-----------------------------------------------------------
-Estimated execution time: 
-${estimatedTestingTime}
-----------------------------------------------------------
-Environment: 
-${environment}
-----------------------------------------------------------
-Max test concurrency: 
-${maxTestConcurrency}
-----------------------------------------------------------
-Max retries: 
-${maxRetries}
-----------------------------------------------------------
-Retry timeout in miliseconds: 
-${retryTimeoutInMiliseconds}
-----------------------------------------------------------
-Test run id: 
-${testRunId}
-----------------------------------------------------------`;
-}
-
-//Pre condition: each test in the suite must have a unique name.
-function getFlakyTestReport(maxRetries:number){
-  const retriedTestFailures = parallel.getRetriedTestFailures() as IRetriedTestFailure[];
-  const retriedTestFailuresGroupBySpecName = lodash.groupBy(retriedTestFailures,x=>x.specName);
-  const flakySpecNames = Object.keys(lodash.pickBy(retriedTestFailuresGroupBySpecName, x =>x.length<=maxRetries));
-  flakySpecNames.sort();
-
-  if(flakySpecNames.length>0){
-    return "\nFlaky tests:\n" +
-      flakySpecNames
-        .map((flakySpecName) =>
-          `- ${flakySpecName} failed ${retriedTestFailuresGroupBySpecName[flakySpecName].length} times before succeding.\n${getRetriedTestFailuresReport(retriedTestFailuresGroupBySpecName[flakySpecName])}`
-        )
-        .join("\n");
-  }
-  else{
-      return "  No flaky tests!";
-  }
-}
-
-function getRetriedTestFailuresReport(retriedTestFailuresForOneTest:IRetriedTestFailure[]){
-  return retriedTestFailuresForOneTest.map(x=>
-      `\nFailure ${x.testExecutionIndex+1}:\n${fullErrorAsString(x.err)}\n`
-  ).join("")
-}  
-
-function fullErrorAsString(error:any){
-  const serializedError = serializeError(error);
-  return JSON.stringify(serializedError,null, "  ");
-}

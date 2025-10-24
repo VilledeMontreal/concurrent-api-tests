@@ -1,7 +1,7 @@
 {
-  "name": "@villedemontreal/mocha-concurrent-api-tests",
-  "version": "1.0.7",
-  "description": "Provides the core functions required to implement concurrent API tests with Mocha.",
+  "name": "@villedemontreal/concurrent-api-tests",
+  "version": "2.0.0",
+  "description": "Provides the core functions required to implement concurrent API tests with vitest.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "files": [
@@ -23,11 +23,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VilledeMontreal/mocha-concurrent-api-tests.git"
+    "url": "git+https://github.com/VilledeMontreal/concurrent-api-tests.git"
   },
-  "homepage": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests",
+  "homepage": "https://github.com/VilledeMontreal/concurrent-api-tests",
   "keywords": [
-    "mocha",
+    "vitest",
     "api",
     "test",
     "spec",
