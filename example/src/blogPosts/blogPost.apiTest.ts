@@ -19,7 +19,7 @@ export function blogPostApiTests() {
       const actual = await postBlogPostWithDefaultAuthor(request);
 
       // assert
-      assert.strictEqual(actual.body.title, 'Incredible story!');
+      assert.strictEqual(actual.body.title, 'Inc222redible story!');
     });
 
     // data partition: by blogPost id

@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npm run test-current",
-    "flaky-test-report-example": "tsc && mocha \"src/flakyTests.apiTestSuite.js\" --require source-map-support/register --require mocha-error-reporters --reporter=specWithFullErrors --no-timeouts --exit",
+    "flaky-test-report-example": "vitest flaky --run",
     "test-current": "env NODE_ENV=localhost npm run compileAndTest",
     "test-latest-stable": "env NODE_ENV=dev npm run compileAndTest",
-    "compileAndTest": "vitest --run",
-    "watch": "tsc --watch --pretty",
+    "compileAndTest": "vitest all --run",
+    "watch": "tsc --noEmit --watch --pretty",
     "lint": "node_modules/.bin/villemontreal-lint . check node both",
     "lint-fix": "node_modules/.bin/villemontreal-lint . fix node both",
     "prettier": "node_modules/.bin/villemontreal-lint . check node prettier",
@@ -29,7 +29,6 @@
     "@villedemontreal/mocha-concurrent-api-tests": "1.0.7",
     "chai": "6.2.0",
     "config": "4.1.1",
-    "source-map-support": "0.5.21",
     "typescript": "5.9.3",
     "vitest": "4.0.3"
   }

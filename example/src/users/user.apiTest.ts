@@ -14,6 +14,11 @@ export function userApiTests() {
 
       const actual = await postUser(request);
 
+      const error = new Error('Pow!') as any;
+      error.additionnalAttribute = "The key to understand this bug."
+      throw error;    
+
+
       assert.strictEqual(actual.body.fullName, 'John Doe');
       assert.strictEqual(actual.body.email, 'john.doe@gmail.com');
     });
