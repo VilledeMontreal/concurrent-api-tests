@@ -8,5 +8,5 @@ shared:
     # In most case, the dev environnement can be used as the base line. 
     # Running the latest stable version and the current version locally is a 
     # great option if possible in your context.
-    # Another option, is to set up a dedicated for the latest stable version.
+    # Another option, is to set up a dedicated clone for the latest stable version.
     apiBaseUrl: https://$devBaseUrl
