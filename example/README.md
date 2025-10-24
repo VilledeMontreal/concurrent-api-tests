@@ -2,30 +2,31 @@
 
 The mocha-concurrent-api-tests example shows how apply the [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) approach of with [Mocha](https://mochajs.org/).
 
-Concurrent API tests are as easy to read as standard Mocha tests. Here are some test case for the [blog posts](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts). 
+Concurrent API tests are as easy to read as standard Mocha tests. Here are some test case for the [blog posts](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts).
 
 These test cases are grouped in a test suite. Running the test suite produces this test report.
+
 ```
 ----------------------------------------------------------
-Test suite name: 
+Test suite name:
 sample test suite
 ----------------------------------------------------------
-Estimated execution time: 
+Estimated execution time:
 3 seconds
 ----------------------------------------------------------
-Environment: 
+Environment:
 local
 ----------------------------------------------------------
-Max test concurrency: 
+Max test concurrency:
 30
 ----------------------------------------------------------
-Max retries: 
+Max retries:
 2
 ----------------------------------------------------------
-Retry timeout in miliseconds: 
+Retry timeout in miliseconds:
 5000
 ----------------------------------------------------------
-Test run id: 
+Test run id:
 zApiTest-7e013e8b-2b70-4b5d-af48-6f55402d123f
 ----------------------------------------------------------
 
@@ -80,27 +81,28 @@ Under /example, run these npm commands:
 - **.template.ts**: Define functions that provide a default payload template and that allow to specify only the parts of the payload that are meaningful for the test case.
 
 ## Test report exemple: when a test fails or does not succeed on the first time (flaky)
+
 ```
 ----------------------------------------------------------
-Test suite name: 
+Test suite name:
 sample test suite
 ----------------------------------------------------------
-Estimated execution time: 
+Estimated execution time:
 3 seconds
 ----------------------------------------------------------
-Environment: 
+Environment:
 local
 ----------------------------------------------------------
-Max test concurrency: 
+Max test concurrency:
 30
 ----------------------------------------------------------
-Max retries: 
+Max retries:
 2
 ----------------------------------------------------------
-Retry timeout in miliseconds: 
+Retry timeout in miliseconds:
 5000
 ----------------------------------------------------------
-Test run id: 
+Test run id:
 zApiTest-0bf3a34b-7511-42a2-b5cf-34efae864f0c
 ----------------------------------------------------------
 
@@ -158,7 +160,7 @@ Failure 2:
       at executeSpecWithRetries (node_modules/mocha.parallel/lib/parallel.js:486:16)
       at processTicksAndRejections (node:internal/process/task_queues:96:5)
       at executeSpecWithRetriesIfSpecified (node_modules/mocha.parallel/lib/parallel.js:469:10)
-  
+
   Full Error:
   {
     "additionnalAttribute": "The key to understand this bug.",
@@ -167,7 +169,6 @@ Failure 2:
     "stack": "Error: Pow!\n    at ContextProxy.<anonymous> (src/flakyTests.apiTestSuite.ts:16:23)\n    at /Users/ULEBL5H/git/github/mocha-concurrent-api-tests/example/node_modules/mocha.parallel/lib/parallel.js:358:20\n    at tryCatcher (node_modules/bluebird/js/main/util.js:26:23)\n    at Promise._resolveFromResolver (node_modules/bluebird/js/main/promise.js:483:31)\n    at new Promise (node_modules/bluebird/js/main/promise.js:71:37)\n    at /Users/ULEBL5H/git/github/mocha-concurrent-api-tests/example/node_modules/mocha.parallel/lib/parallel.js:345:12\n    at Object.getPromise (node_modules/mocha.parallel/lib/parallel.js:272:43)\n    at executeSpecWithRetries (node_modules/mocha.parallel/lib/parallel.js:486:16)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at executeSpecWithRetriesIfSpecified (node_modules/mocha.parallel/lib/parallel.js:469:10)"
   }
 ```
-
 
 ## Required extensions for real-time linting with VSCode
 

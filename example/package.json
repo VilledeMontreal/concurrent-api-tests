@@ -1,35 +1,35 @@
 {
-  "name": "mocha-concurrent-api-test-examples",
+  "name": "concurrent-api-test-examples",
   "version": "1.0.0",
   "scripts": {
+    "open-watch-mode-no-emit-in-a-second-screen-for-fast-feedback": "tsc --noEmit --watch --pretty",
     "start": "npm run test-current",
-    "flaky-test-report-example": "vitest flaky --run",
     "test-current": "env NODE_ENV=localhost npm run compileAndTest",
     "test-latest-stable": "env NODE_ENV=dev npm run compileAndTest",
     "compileAndTest": "vitest all --run",
-    "watch": "tsc --noEmit --watch --pretty",
-    "lint": "node_modules/.bin/villemontreal-lint . check node both",
-    "lint-fix": "node_modules/.bin/villemontreal-lint . fix node both",
-    "prettier": "node_modules/.bin/villemontreal-lint . check node prettier",
-    "prettier-fix": "node_modules/.bin/villemontreal-lint . fix node prettier",
-    "tslint": "node_modules/.bin/villemontreal-lint . check node tslint",
-    "tslint-fix": "node_modules/.bin/villemontreal-lint . fix node tslint"
+    "flaky-test-report-example": "vitest flaky --run",
+    "lint-fix": "prettier --write . && eslint . --fix"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests"
+    "url": "https://github.com/VilledeMontreal/concurrent-api-tests"
   },
-  "homepage": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests",
+  "homepage": "https://github.com/VilledeMontreal/concurrent-api-tests",
   "author": "Stéphane Leblanc",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
     "@types/chai": "5.2.3",
     "@types/config": "3.3.5",
-    "@villedemontreal/lint-config": "1.7.7",
     "@villedemontreal/mocha-concurrent-api-tests": "1.0.7",
     "chai": "6.2.0",
     "config": "4.1.1",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "jiti": "2.6.1",
+    "prettier": "3.6.2",
     "typescript": "5.9.3",
+    "typescript-eslint": "^8.46.2",
     "vitest": "4.0.3"
   }
 }

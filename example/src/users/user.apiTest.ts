@@ -1,26 +1,21 @@
-import { assert } from 'chai';
-import { describe, expect, it } from 'vitest'
-import { postUser } from './user.fixture';
-import { copyUserTemplate } from './user.template';
+import { assert } from "chai";
+import { describe, it } from "vitest";
+import { postUser } from "./user.fixture";
+import { copyUserTemplate } from "./user.template";
 
 export function userApiTests() {
-  describe('Users', () => {
+  describe("Users", () => {
     // data partition: by user id
-    it('Create', async () => {
-      const request = copyUserTemplate(x => {
-        x.fullName = 'John Doe';
-        x.email = 'john.doe@gmail.com';
+    it("Create", async () => {
+      const request = copyUserTemplate((x) => {
+        x.fullName = "John Doe";
+        x.email = "john.doe@gmail.com";
       });
 
       const actual = await postUser(request);
 
-      const error = new Error('Pow!') as any;
-      error.additionnalAttribute = "The key to understand this bug."
-      throw error;    
-
-
-      assert.strictEqual(actual.body.fullName, 'John Doe');
-      assert.strictEqual(actual.body.email, 'john.doe@gmail.com');
+      assert.strictEqual(actual.body.fullName, "John Doe");
+      assert.strictEqual(actual.body.email, "john.doe@gmail.com");
     });
   });
 }

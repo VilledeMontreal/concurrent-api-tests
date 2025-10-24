@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es2016", 
-    "module": "commonjs", 
-    "esModuleInterop": true, 
-    "forceConsistentCasingInFileNames": true, 
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictNullChecks": false,
-    "skipLibCheck": true 
+    "skipLibCheck": true
   }
 }

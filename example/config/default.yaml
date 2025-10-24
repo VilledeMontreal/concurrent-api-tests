@@ -1,6 +1,6 @@
 # The code base is organized by feature, the config is organized by feature as well.
 blogPosts:
-  configExample: true 
+  configExample: true
 users:
   configExample: 32
 shared:

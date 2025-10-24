@@ -4,21 +4,25 @@
 // HTTP requests to real HTTP servers.
 // ----------------------------------------------------------------------
 
-import { aFewSeconds } from '@villedemontreal/mocha-concurrent-api-tests';
-import { ApiError, BlogPost, HttpResponse, User } from './apiClient';
+import { aFewSeconds } from "@villedemontreal/mocha-concurrent-api-tests";
+import { ApiError, BlogPost, HttpResponse, User } from "./apiClient";
 
-export async function fakeGetBlogPosts(authorId: string): Promise<HttpResponse<BlogPost[]>> {
+export async function fakeGetBlogPosts(
+  authorId: string,
+): Promise<HttpResponse<BlogPost[]>> {
   await fakeHttpRequestExecutionTime();
 
   const body = searchBlogPosts(authorId);
 
   return {
     httpStatusCode: 200,
-    body
+    body,
   };
 }
 
-export async function fakePostBlogPost(request: BlogPost): Promise<HttpResponse<BlogPost>> {
+export async function fakePostBlogPost(
+  request: BlogPost,
+): Promise<HttpResponse<BlogPost>> {
   await fakeHttpRequestExecutionTime();
 
   ensureTitleIsRequired(request);
@@ -29,7 +33,7 @@ export async function fakePostBlogPost(request: BlogPost): Promise<HttpResponse<
 
   return {
     httpStatusCode: 200,
-    body
+    body,
   };
 }
 
@@ -41,7 +45,7 @@ export async function fakePostUser(request: User): Promise<HttpResponse<User>> {
 
   return {
     httpStatusCode: 200,
-    body
+    body,
   };
 }
 
@@ -50,8 +54,8 @@ function ensureTitleIsRequired(request: BlogPost) {
     const errrorResponse: HttpResponse<ApiError> = {
       httpStatusCode: 400,
       body: {
-        message: 'The title is required'
-      }
+        message: "The title is required",
+      },
     };
     throw errrorResponse;
   }
@@ -63,8 +67,8 @@ function ensureAuthorExists(request: BlogPost) {
     const errrorResponse: HttpResponse<ApiError> = {
       httpStatusCode: 400,
       body: {
-        message: `The author ${request.authorId} does not exist.`
-      }
+        message: `The author ${request.authorId} does not exist.`,
+      },
     };
     throw errrorResponse;
   }
@@ -78,11 +82,11 @@ const _blogPostCollection: BlogPost[] = [];
 const _userCollection: User[] = [];
 
 function searchBlogPosts(authorId: string): BlogPost[] {
-  return _blogPostCollection.filter(x => x.authorId === authorId);
+  return _blogPostCollection.filter((x) => x.authorId === authorId);
 }
 
 function getBlogPostById(id: string): BlogPost {
-  return _blogPostCollection.filter(x => x.id === id)[0] || null;
+  return _blogPostCollection.filter((x) => x.id === id)[0] || null;
 }
 
 function createBlogPost(blogPost: BlogPost): string {
@@ -92,7 +96,7 @@ function createBlogPost(blogPost: BlogPost): string {
 }
 
 function getUserById(id: string): User {
-  return _userCollection.filter(x => x.id === id)[0] || null;
+  return _userCollection.filter((x) => x.id === id)[0] || null;
 }
 
 function createUser(user: User): string {
