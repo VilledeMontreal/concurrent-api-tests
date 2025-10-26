@@ -36,9 +36,9 @@
   "devDependencies": {
     "@eslint/js": "9.38.0",
     "@types/chai": "5.2.3",
-    "@types/lodash": "4.17.7",
+    "@types/lodash": "4.17.20",
     "@types/node": "24.9.1",
-    "@types/uuid": "10.0.0",
+    "@types/uuid": "11.0.0",
     "chai": "6.2.0",
     "eslint": "9.38.0",
     "globals": "16.4.0",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "lodash": "4.17.21",
-    "uuid": "9.0.1"
+    "uuid": "13.0.0"
   },
   "bugs": {
     "url": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests/issues"
