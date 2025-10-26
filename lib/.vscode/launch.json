@@ -28,6 +28,6 @@
       "console": "integratedTerminal",
       "outputCapture": "std",
       "protocol": "inspector"
-    }    
+    }
   ]
 }

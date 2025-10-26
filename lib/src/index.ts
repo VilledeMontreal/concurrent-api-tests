@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-import assert = require('assert');
-import lodash = require('lodash');
+import { v4 as uuidv4 } from "uuid";
+import assert = require("assert");
+import lodash = require("lodash");
 
 // By design, there can be only one apiTestSuite; thus, global properties are acceptable in this context.
 let testRunId: string | null = null;
@@ -19,14 +19,17 @@ export function getTestRunId() {
 
 export function aFewSeconds(delayInSeconds: number): Promise<void> {
   const delayInMiliseconds = delayInSeconds * 1000;
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(async () => {
       resolve();
     }, delayInMiliseconds);
   });
 }
 
-export async function shouldThrow<T>(act: () => Promise<T>, customAssert: (err: any) => void): Promise<void> {
+export async function shouldThrow<T>(
+  act: () => Promise<T>,
+  customAssert: (err: any) => void,
+): Promise<void> {
   let haveTrown = true;
   try {
     await act();
@@ -35,7 +38,9 @@ export async function shouldThrow<T>(act: () => Promise<T>, customAssert: (err: 
     customAssert(err);
   }
   if (!haveTrown) {
-    assert.fail('It should have thrown an exception, but it succeeded unexpectedly.');
+    assert.fail(
+      "It should have thrown an exception, but it succeeded unexpectedly.",
+    );
   }
 }
 
@@ -53,7 +58,7 @@ export function defineCopyTemplate<T>(template: T): CopyTemplate<T> {
 
 export function defineCopyTemplateVariation<T>(
   originalCopyTemplate: CopyTemplate<T>,
-  variation: InitTemplate<T>
+  variation: InitTemplate<T>,
 ): CopyTemplate<T> {
   return (init?: InitTemplate<T>) => {
     return originalCopyTemplate((templateCopy: T) => {
@@ -68,17 +73,24 @@ export function defineCopyTemplateVariation<T>(
 export type CreateSharedFixture<TRootEntity> = () => Promise<TRootEntity>;
 export type GetSharedFixture<TRootEntity> = () => Promise<TRootEntity>;
 export function defineGetSharedFixture<TRootEntity>(
-  createSharedFixture: CreateSharedFixture<TRootEntity>
+  createSharedFixture: CreateSharedFixture<TRootEntity>,
 ): GetSharedFixture<TRootEntity> {
   // defineGetSharedFixtureByKey is adapted for the case where a single share fixture is required.
-  const getSharedFixtureByKey = defineGetSharedFixtureByKey<string, TRootEntity>(key => createSharedFixture());
-  return () => getSharedFixtureByKey('single-key');
+  const getSharedFixtureByKey = defineGetSharedFixtureByKey<
+    string,
+    TRootEntity
+  >((key) => createSharedFixture());
+  return () => getSharedFixtureByKey("single-key");
 }
 
-export type CreateSharedFixtureByKey<TKey, TRootEntity> = (key: TKey) => Promise<TRootEntity>;
-export type GetSharedFixtureByKey<TKey, TRootEntity> = (key: TKey) => Promise<TRootEntity>;
+export type CreateSharedFixtureByKey<TKey, TRootEntity> = (
+  key: TKey,
+) => Promise<TRootEntity>;
+export type GetSharedFixtureByKey<TKey, TRootEntity> = (
+  key: TKey,
+) => Promise<TRootEntity>;
 export function defineGetSharedFixtureByKey<TKey, TRootEntity>(
-  createSharedFixtureByKey: CreateSharedFixtureByKey<TKey, TRootEntity>
+  createSharedFixtureByKey: CreateSharedFixtureByKey<TKey, TRootEntity>,
 ): GetSharedFixtureByKey<TKey, TRootEntity> {
   const map: Map<TKey, Promise<TRootEntity>> = new Map();
 
@@ -89,7 +101,7 @@ export function defineGetSharedFixtureByKey<TKey, TRootEntity>(
     if (!map.has(key)) {
       const sharedFixturePromise = createSharedFixtureByKey(key)
         // Share fixture must be immutable. Here we enforce it.
-        .then(x => Object.freeze(x));
+        .then((x) => Object.freeze(x));
 
       map.set(key, sharedFixturePromise);
     }

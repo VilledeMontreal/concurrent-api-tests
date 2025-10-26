@@ -22,11 +22,11 @@ Execute a mocha concurrent api test suite. Mocha [describe function](https://moc
 - maxTestConcurrency: The maximum number of tests that can be executed concurrently (Ex: 30).
 - maxRetries: If a test fails, it will be retried until it succeeds or maxRetries is reached. Useful if some tests have dependecies (ex: network) that fail from time to time.
 - retryTimeoutInMiliseconds: If a test hang and maxRetries > 0, the test will be retried after retryTimeoutInMiliseconds.
-retryTimeoutInMiliseconds does not alter the default timeout of Mocha.
-Ex: 
-if a test hang forever and maxRetries=10, retryTimeoutInMiliseconds=1000 and 
-mocha timeout is 5 secondes, then the test will be retried 5 times because 
-retryTimeoutInMiliseconds but will stop as soon as Mocha timeout is readed.
+  retryTimeoutInMiliseconds does not alter the default timeout of Mocha.
+  Ex:
+  if a test hang forever and maxRetries=10, retryTimeoutInMiliseconds=1000 and
+  mocha timeout is 5 secondes, then the test will be retried 5 times because
+  retryTimeoutInMiliseconds but will stop as soon as Mocha timeout is readed.
 - apiTests: A function that invoke many [it function](https://mochajs.org/#getting-started). Mocha [describe function](https://mochajs.org/#getting-started) can be emulated by grouping [it functions](https://mochajs.org/#getting-started) into standard functions. See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L11-L14).
 - skippedTests: [optionnal] A function that invoke many skipped [it function](https://mochajs.org/#getting-started). Allows to skip a group of [it functions](https://mochajs.org/#getting-started). See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L15-L18).
 

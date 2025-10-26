@@ -15,12 +15,7 @@
     "open-watch-mode-no-emit-in-a-second-screen-for-fast-feedback": "tsc --noEmit --watch --pretty",
     "start": "vitest run",
     "package": "tsc",
-    "lint": "villemontreal-lint . check node both",
-    "lint-fix": "villemontreal-lint . fix node both",
-    "prettier": "villemontreal-lint . check node prettier",
-    "prettier-fix": "villemontreal-lint . fix node prettier",
-    "tslint": "villemontreal-lint . check node tslint",
-    "tslint-fix": "villemontreal-lint . fix node tslint"
+    "lint-fix": "prettier --write . && eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -39,10 +34,18 @@
   "author": "Stéphane Leblanc",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "9.38.0",
     "@types/chai": "5.2.3",
     "@types/lodash": "4.17.7",
+    "@types/node": "24.9.1",
+    "@types/uuid": "10.0.0",
     "chai": "6.2.0",
+    "eslint": "9.38.0",
+    "globals": "16.4.0",
+    "jiti": "2.6.1",
+    "prettier": "3.6.2",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2",
     "vitest": "4.0.3"
   },
   "dependencies": {
