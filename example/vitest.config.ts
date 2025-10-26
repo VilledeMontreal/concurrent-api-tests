@@ -1,9 +1,10 @@
 import { defineConfig } from "vitest/config";
+import { FlakyTestReporter } from "@villedemontreal/concurrent-api-tests";
 
 export default defineConfig({
   test: {
     include: ["**/*.apiTestSuite.ts"],
-    reporters: ["verbose"],
+    reporters: [new FlakyTestReporter()],
     testTimeout: 2 * 60 * 1000, // 2 min
     slowTestThreshold: 1 * 60 * 1000, // 1 min
     retry: 2,

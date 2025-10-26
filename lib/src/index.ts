@@ -1,6 +1,14 @@
 import { v4 as uuidv4 } from "uuid";
 import assert from "assert";
 import lodash from "lodash";
+import c from "tinyrainbow";
+import {
+  SerializedError,
+  TestCase,
+  TestModule,
+  TestRunEndReason,
+} from "vitest/node";
+import { VerboseReporter } from "vitest/reporters";
 
 // By design, there can be only one apiTestSuite; thus, global properties are acceptable in this context.
 let testRunId: string | null = null;
@@ -113,3 +121,74 @@ export function defineGetSharedFixtureByKey<TKey, TRootEntity>(
 //*******************************************************************************************
 // Reporting
 //*******************************************************************************************
+
+export const F_LONG_DASH = "⎯";
+
+export class FlakyTestReporter extends VerboseReporter {
+  flakyTests: TestCase[] = [];
+
+  onTestCaseResult(test: TestCase): void {
+    super.onTestCaseResult(test);
+
+    const testResult = test.result();
+    if (
+      testResult.state !== "failed" &&
+      testResult.errors &&
+      testResult.errors.length > 0
+    ) {
+      this.flakyTests.push(test);
+    }
+  }
+
+  onTestRunEnd(
+    testModules: ReadonlyArray<TestModule>,
+    unhandledErrors: ReadonlyArray<SerializedError>,
+    reason: TestRunEndReason,
+  ): void {
+    this.printFlakyTestHeader();
+
+    this.flakyTests.forEach((x) => this.printFlakyTest(x));
+
+    super.onTestRunEnd(testModules, unhandledErrors, reason);
+  }
+
+  printFlakyTestHeader() {
+    this.printYellowSeperator();
+    this.log(c.bgYellow(c.bold(` Flaky Tests ${this.flakyTests.length} `)));
+    this.printYellowSeperator();
+  }
+
+  printFlakyTest(flakyTest: TestCase) {
+    const testResult = flakyTest.result();
+    const errors = testResult.errors ? testResult.errors : [];
+
+    this.ctx.logger.error(
+      `${c.bgYellow(c.bold(" FLAKY "))} ${flakyTest.fullName}: failed ${nTimes(errors.length)} and then passed.`,
+    );
+
+    errors.forEach((e) => {
+      this.ctx.logger.printError(e, {
+        project: flakyTest.project,
+        verbose: true,
+      });
+    });
+
+    this.printYellowSeperator();
+  }
+
+  printYellowSeperator() {
+    this.log(c.yellow(c.dim(F_LONG_DASH.repeat(getCols()))));
+  }
+}
+
+function nTimes(count: number) {
+  return `${count} time${count > 1 ? "s" : ""}`;
+}
+
+function getCols(delta = 0) {
+  let length = process.stdout?.columns;
+  if (!length || Number.isNaN(length)) {
+    length = 30;
+  }
+  return Math.max(length + delta, 0);
+}

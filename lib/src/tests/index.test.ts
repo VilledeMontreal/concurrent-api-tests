@@ -30,7 +30,7 @@ describe("Shared fixture", () => {
       async (key) => {
         loadSharedFixtureByKeyCount[key] = loadSharedFixtureByKeyCount[key] + 1;
         return `default user with role = ${key}`;
-      }
+      },
     );
 
     const adminFirst = await getShareFixtureByKey("admin");
@@ -53,7 +53,7 @@ describe("Shared fixture", () => {
 
     await shouldThrow(
       () => getShareFixture(),
-      (err: any) => assert.strictEqual(err.message, "Pow")
+      (err: any) => assert.strictEqual(err.message, "Pow"),
     );
   });
 });
