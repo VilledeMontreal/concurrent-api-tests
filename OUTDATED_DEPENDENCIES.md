@@ -61,7 +61,7 @@ All dependencies in the example package are up to date:
 ### Critical Updates
 
 1. **uuid (9.0.1 → 13.0.0)**
-   - This is a major version upgrade (4 major versions)
+   - This is a major version upgrade spanning versions 10, 11, 12, to reach 13
    - Review the [uuid changelog](https://github.com/uuidjs/uuid/blob/main/CHANGELOG.md) before updating
    - Test thoroughly as breaking changes are expected
    - Consider updating in a separate PR with comprehensive testing
