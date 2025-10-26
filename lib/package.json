@@ -40,14 +40,14 @@
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "5.2.3",
-    "@types/lodash": "4.14.170",
+    "@types/lodash": "4.17.7",
     "chai": "6.2.0",
     "typescript": "5.9.3",
     "vitest": "4.0.3"
   },
   "dependencies": {
     "lodash": "4.17.21",
-    "uuid": "8.3.2"
+    "uuid": "9.0.1"
   },
   "bugs": {
     "url": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests/issues"
