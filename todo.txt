@@ -1,8 +1,0 @@
-*** promote
-confoo 
-***
-
-*** later
-- unique constraint: example
-- fix linter: why I interface prefix does not work
-***
