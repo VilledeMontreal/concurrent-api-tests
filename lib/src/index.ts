@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import assert = require("assert");
-import lodash = require("lodash");
+import assert from "assert";
+import lodash from "lodash";
 
 // By design, there can be only one apiTestSuite; thus, global properties are acceptable in this context.
 let testRunId: string | null = null;
@@ -79,7 +79,7 @@ export function defineGetSharedFixture<TRootEntity>(
   const getSharedFixtureByKey = defineGetSharedFixtureByKey<
     string,
     TRootEntity
-  >((key) => createSharedFixture());
+  >(() => createSharedFixture());
   return () => getSharedFixtureByKey("single-key");
 }
 
