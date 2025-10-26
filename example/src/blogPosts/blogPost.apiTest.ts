@@ -1,4 +1,4 @@
-import { shouldThrow } from "@villedemontreal/mocha-concurrent-api-tests";
+import { shouldThrow } from "@villedemontreal/concurrent-api-tests";
 import { assert } from "chai";
 import { describe, it } from "vitest";
 import { postUser } from "../users/user.fixture";

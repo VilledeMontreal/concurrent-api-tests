@@ -18,9 +18,9 @@
   "author": "Stéphane Leblanc",
   "license": "MIT",
   "dependencies": {
+    "@villedemontreal/concurrent-api-tests": "file:../lib",
     "@types/chai": "5.2.3",
     "@types/config": "3.3.5",
-    "@villedemontreal/mocha-concurrent-api-tests": "1.0.7",
     "chai": "6.2.0",
     "config": "4.1.1",
     "vitest": "4.0.3"

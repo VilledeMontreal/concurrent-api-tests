@@ -1,8 +1,8 @@
-# mocha-concurrent-api-tests example
+# concurrent-api-tests example
 
-The mocha-concurrent-api-tests example shows how apply the [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) approach of with [Mocha](https://mochajs.org/).
+The concurrent-api-tests example shows how to apply the [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) approach with [Vitest](https://vitest.dev/).
 
-Concurrent API tests are as easy to read as standard Mocha tests. Here are some test case for the [blog posts](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts).
+Concurrent API tests are as easy to read as standard Vitest tests. Here are some test cases for the [blog posts](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts).
 
 These test cases are grouped in a test suite. Running the test suite produces this test report.
 
@@ -54,7 +54,7 @@ Under /example, run these npm commands:
 
 ## Features
 
-- Usage examples of [mocha-concurrent-api-tests functions](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/lib/README.md#functions)
+- Usage examples of [concurrent-api-tests functions](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/lib/README.md#functions)
 - File extension convention
 - Ability to test against the current and the latest stable version version of the system under test.
   - `npm run test-current`

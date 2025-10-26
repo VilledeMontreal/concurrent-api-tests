@@ -1,7 +1,7 @@
 import {
   defineGetSharedFixture,
   defineGetSharedFixtureByKey,
-} from "@villedemontreal/mocha-concurrent-api-tests";
+} from "@villedemontreal/concurrent-api-tests";
 import {
   HttpResponse,
   postUserApiClient,
