@@ -6,8 +6,8 @@ export default defineConfig({
     reporters: ["verbose"],
     testTimeout: 30000, // 30 seconds
     slowTestThreshold: 5000, // 5 seconds
-    // Compile TypeScript on the fly
-    globals: true,
     environment: "node",
+    // Avoid importing vitest in each test file
+    globals: true,
   },
 });

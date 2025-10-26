@@ -14,5 +14,7 @@ export default defineConfig({
     // single-threaded
     pool: "threads",
     maxWorkers: 1,
+    // Avoid importing vitest in each test file
+    globals: true,
   },
 });

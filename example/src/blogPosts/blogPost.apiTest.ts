@@ -1,6 +1,5 @@
 import { shouldThrow } from "@villedemontreal/concurrent-api-tests";
 import { assert } from "chai";
-import { describe, it } from "vitest";
 import { postUser } from "../users/user.fixture";
 import { copyUserTemplate } from "../users/user.template";
 import {

@@ -1,5 +1,4 @@
 import { assert } from "chai";
-import { describe, it } from "vitest";
 
 describe("Flaky", () => {
   it("Test pass", () => {

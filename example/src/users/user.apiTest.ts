@@ -1,5 +1,4 @@
 import { assert } from "chai";
-import { describe, it } from "vitest";
 import { postUser } from "./user.fixture";
 import { copyUserTemplate } from "./user.template";
 
