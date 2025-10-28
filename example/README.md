@@ -43,19 +43,18 @@ Under /example, run these npm commands:
 - When a test fails due to an unexpected error, the full error in JSON format is available in the test report.
 - When a test does not succeed on the first time (flaky), the full error in JSON format is available in the test report.
 - Incremental compilation
-  - `npm run watch`
+  - `npm run watch-no-emit`
 - Debug launcher for Visual Studio Code
-  - Launch `Test current (Launch npm run watch before)`
-  - Launch `Test latest stable (Launch npm run watch before)`
+  - Launch `Test current (Launch npm run watch-no-emit before)`
+  - Launch `Test latest stable (Launch npm run watch-no-emit before)`
 - Default [linter](<https://en.wikipedia.org/wiki/Lint_(software)>)
-  - `npm run lint`
   - `npm run lint-fix`
 
 ## File extension convention
 
 - **.apiTests.ts**: Define a list of cohesive test cases related to the same feature. More than one .apiTests.ts file per feature may be required.
 
-- **.apiTestSuite.ts**: Run many api tests concurrently. In general, having a single api test suite is recommanded. If your api tests run fast, why not always run them all? If needed, many api test suites can be created.
+- **.apiTestSuite.ts**: Run many api tests concurrently. In general, having a single api test suite is recommended. If your api tests run fast in a single-thread, why not always run them all? If needed, many api test suites can be created.
 
 - **.fixture.ts**: Define functions that can be used as building blocks for [arranging](https://automationpanda.com/2020/07/07/arrange-act-assert-a-pattern-for-writing-good-tests/) the test cases.
 

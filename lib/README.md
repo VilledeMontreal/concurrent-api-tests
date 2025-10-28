@@ -10,36 +10,6 @@ In your project, run this npm command:
 
 ## Functions
 
-### apiTestSuite(testSuiteName, estimatedTestingTime, environment, maxTestConcurrency, maxRetries, retryTimeoutInMiliseconds, apiTests, skippedTests)
-
-Execute a vitest concurrent api test suite. Vitest [describe function](https://vitest.dev/api/#describe) and nested describe functions are not supported by concurrent-api-tests. Instead, a concurrent api test suite executes many Vitest [it function](https://vitest.dev/api/#test) concurrently in the same thread.
-
-**Arguments**
-
-- testSuiteName: The name of the test suite.
-- estimatedTestingTime: The estimated time required to execute the test suite (Ex: "45 seconds").
-- environment: The environment against which the test suite is executed (Ex: "dev").
-- maxTestConcurrency: The maximum number of tests that can be executed concurrently (Ex: 30).
-- maxRetries: If a test fails, it will be retried until it succeeds or maxRetries is reached. Useful if some tests have dependencies (ex: network) that fail from time to time.
-- retryTimeoutInMiliseconds: If a test hangs and maxRetries > 0, the test will be retried after retryTimeoutInMiliseconds.
-  retryTimeoutInMiliseconds does not alter the default timeout of Vitest.
-  Ex:
-  if a test hangs forever and maxRetries=10, retryTimeoutInMiliseconds=1000 and
-  vitest timeout is 5 seconds, then the test will be retried 5 times because
-  retryTimeoutInMiliseconds but will stop as soon as Vitest timeout is reached.
-- apiTests: A function that invokes many [it function](https://vitest.dev/api/#test). Vitest [describe function](https://vitest.dev/api/#describe) can be emulated by grouping [it functions](https://vitest.dev/api/#test) into standard functions. See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L11-L14).
-- skippedTests: [optional] A function that invokes many skipped [it function](https://vitest.dev/api/#test). Allows to skip a group of [it functions](https://vitest.dev/api/#test). See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L15-L18).
-
-**Returns**
-
-void
-
-**Example**
-
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L6-L19).
-
----
-
 ### defineCopyTemplate(template)
 
 Define a function that provide a default payload template and that allow to specify only the parts of the payload that are meaningful for the test case. This way, test cases are easier to read since only the parts that matter are specified. Moreover, if a change in a payload is required, only the default payload template and the related tests need to be changed.
@@ -170,4 +140,4 @@ Run all unit tests, run this npm command:
 
 Debug all unit tests, run this npm command:
 
-`npm run watch` (to activate incremental transpilation) and use the Visual Studio Code launcher **Debug**.
+`npm run watch-no-emit` (to activate incremental transpilation) and use the Visual Studio Code launcher **Debug**.
