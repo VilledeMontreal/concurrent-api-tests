@@ -18,6 +18,9 @@ Legacy approach: Mocha + mocha.parallel for in-process spec-level concurrency. I
 
 Select Vitest, wrapped by `@villedemontreal/concurrent-api-tests` to isolate runner specifics (concurrency helpers, deterministic shared state, flaky reporting). Vitest provides active maintenance, built‑in retries, rich reporters, TypeScript/ESM first design, and high performance via the Vite pipeline. Vitest yields strongest overall improvement with lowest long‑term risk.
 
+mocha-concurrent-api-tests is no longer maintained. To become a maintainer, you can fork from this tag:
+https://github.com/VilledeMontreal/concurrent-api-tests/releases/tag/mocha-concurrent-api-tests
+
 ### Comparative Evaluation
 
 | Criteria                                                      | Status quo     | Ava | Vitest | Mocha with throat |

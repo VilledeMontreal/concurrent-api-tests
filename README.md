@@ -14,6 +14,10 @@ The example can be used as a template for starting new test projects.
 
 For more details, see the [example documentation](/example/README.md#concurrent-api-tests-example).
 
+## mocha-concurrent-api-tests
+
+Mocha is no longer recommended to implement [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550). See the [ADR](/adrs/adr-0001-replace-mocha-parallel-with-vitest.md) for more detail.
+
 ## License
 
 The source code of this project is distributed under the [MIT License](LICENSE).
