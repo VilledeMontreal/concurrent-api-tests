@@ -2,7 +2,7 @@
 
 The concurrent-api-tests example shows how to apply the [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) approach with [Vitest](https://vitest.dev/).
 
-Concurrent API tests are as easy to read as standard Vitest tests. Here are some test cases for the [blog posts](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts).
+Concurrent API tests are as easy to read as standard Vitest tests. Here are some example test cases for [blog posts](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts) and [users](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.apiTest.ts).
 
 These test cases are grouped in a test suite. Running the test suite produces this test report.
 
@@ -42,19 +42,18 @@ Under /example, run these npm commands:
   - `npm run test-latest-stable`
 - When a test fails due to an unexpected error, the full error in JSON format is available in the test report.
 - When a test does not succeed on the first time (flaky), the full error in JSON format is available in the test report.
-- Incremental compilation
+- Incremental compilation without emit (for type safety feedback, vitest doesn't need tsc for transpilation)
   - `npm run watch-no-emit`
-- Debug launcher for Visual Studio Code
-  - Launch `Test current (Launch npm run watch-no-emit before)`
-  - Launch `Test latest stable (Launch npm run watch-no-emit before)`
-- Default [linter](<https://en.wikipedia.org/wiki/Lint_(software)>)
+- Debug
+  - Use a JavaScript Debug Terminal to launch npm script (ex: `npm run test-current`)
+- Lint
   - `npm run lint-fix`
 
 ## File extension convention
 
 - **.apiTests.ts**: Define a list of cohesive test cases related to the same feature. More than one .apiTests.ts file per feature may be required.
 
-- **.apiTestSuite.ts**: Run many api tests concurrently. In general, having a single api test suite is recommended. If your api tests run fast in a single-thread, why not always run them all? If needed, many api test suites can be created.
+- **.apiTestSuite.ts**: Run many api tests concurrently. In general, having a single api test suite is recommended. If your api tests run fast in a single-threaded execution, why not always run them all? If needed, many api test suites can be created.
 
 - **.fixture.ts**: Define functions that can be used as building blocks for [arranging](https://automationpanda.com/2020/07/07/arrange-act-assert-a-pattern-for-writing-good-tests/) the test cases.
 
@@ -137,8 +136,3 @@ Serialized Error: { additionnalAttribute: 'The key to understand this bug.' }
    Start at  20:53:45
    Duration  174ms (transform 24ms, setup 0ms, collect 31ms, tests 6ms, environment 0ms, prepare 9ms)
 ```
-
-## Required extensions for real-time linting with VSCode
-
-- Prettier - code formatter for enforcing a consistent style
-- TSLint - checks code for readability, maintainability

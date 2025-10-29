@@ -55,7 +55,8 @@ Assert against an API request that is expected to throw an error.
 
 - act: A function that send the API request.
 - customAssert: A function that assert against the error.
-  **Returns**
+
+**Returns**
 
 void
 
@@ -140,4 +141,8 @@ Run all unit tests, run this npm command:
 
 Debug all unit tests, run this npm command:
 
-`npm run watch-no-emit` (to activate incremental transpilation) and use the Visual Studio Code launcher **Debug**.
+`npm run watch-no-emit` (to activate incremental transpilation) and use a JavaScript Debug Terminal.
+
+Lint, run this npm command:
+
+`npm run lint-fix`
