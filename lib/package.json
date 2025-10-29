@@ -12,7 +12,7 @@
     "lib": "./dist/src"
   },
   "scripts": {
-    "open-watch-mode-no-emit-in-a-second-screen-for-fast-feedback": "tsc --noEmit --watch --pretty",
+    "watch-no-emit": "tsc --noEmit --watch --pretty",
     "start": "vitest run",
     "package": "tsc",
     "lint-fix": "prettier --write . && eslint . --fix"

@@ -2,7 +2,7 @@
   "name": "concurrent-api-test-examples",
   "version": "1.0.0",
   "scripts": {
-    "open-watch-mode-no-emit-in-a-second-screen-for-fast-feedback": "tsc --noEmit --watch --pretty",
+    "watch-no-emit": "tsc --noEmit --watch --pretty",
     "start": "npm run test-current",
     "test-current": "env NODE_ENV=localhost npm run compileAndTest",
     "test-latest-stable": "env NODE_ENV=dev npm run compileAndTest",

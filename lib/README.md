@@ -1,44 +1,14 @@
-# mocha-concurrent-api-tests
+# concurrent-api-tests
 
-Mocha-concurrent-api-tests provides the core functions required to implement [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) with [Mocha](https://mochajs.org/). Thanks to [mocha.parallel](https://github.com/danielstjules/mocha.parallel) for providing a [single threaded event loop architecture](https://medium.com/@sgd.daran/node-js-single-threaded-event-loop-model-dbeccf6a7c34) for Mocha tests.
+Concurrent-api-tests provides the core functions required to implement [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) with [Vitest](https://vitest.dev/).
 
 ## To Install
 
 In your project, run this npm command:
 
-`npm install @villedemontreal/mocha-concurrent-api-tests`
+`npm install @villedemontreal/concurrent-api-tests`
 
 ## Functions
-
-### apiTestSuite(testSuiteName, estimatedTestingTime, environment, maxTestConcurrency, maxRetries, retryTimeoutInMiliseconds, apiTests, skippedTests)
-
-Execute a mocha concurrent api test suite. Mocha [describe function](https://mochajs.org/#getting-started) and nested describe functions are not supported by mocha-concurrent-api-tests. Instead, a mocha concurrent api test suite executes many Mocha [it function](https://mochajs.org/#getting-started) concurrently in the same thread.
-
-**Arguments**
-
-- testSuiteName: The name of the test suite.
-- estimatedTestingTime: The estimated time required to execute the test suite (Ex: "45 seconds").
-- environment: The environment against wish the test suite is executeed (Ex: "dev").
-- maxTestConcurrency: The maximum number of tests that can be executed concurrently (Ex: 30).
-- maxRetries: If a test fails, it will be retried until it succeeds or maxRetries is reached. Useful if some tests have dependecies (ex: network) that fail from time to time.
-- retryTimeoutInMiliseconds: If a test hang and maxRetries > 0, the test will be retried after retryTimeoutInMiliseconds.
-  retryTimeoutInMiliseconds does not alter the default timeout of Mocha.
-  Ex:
-  if a test hang forever and maxRetries=10, retryTimeoutInMiliseconds=1000 and
-  mocha timeout is 5 secondes, then the test will be retried 5 times because
-  retryTimeoutInMiliseconds but will stop as soon as Mocha timeout is readed.
-- apiTests: A function that invoke many [it function](https://mochajs.org/#getting-started). Mocha [describe function](https://mochajs.org/#getting-started) can be emulated by grouping [it functions](https://mochajs.org/#getting-started) into standard functions. See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L11-L14).
-- skippedTests: [optionnal] A function that invoke many skipped [it function](https://mochajs.org/#getting-started). Allows to skip a group of [it functions](https://mochajs.org/#getting-started). See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L15-L18).
-
-**Returns**
-
-void
-
-**Example**
-
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/allTests.apiTestSuite.ts#L6-L19).
-
----
 
 ### defineCopyTemplate(template)
 
@@ -54,7 +24,7 @@ A function that provide a default payload template and allow to specify only the
 
 **Example**
 
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L4-L17).
+See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L4-L17).
 
 ---
 
@@ -73,7 +43,7 @@ A function that provide a default payload template and allow to specify only the
 
 **Example**
 
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L19-L23).
+See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L19-L23).
 
 ---
 
@@ -91,7 +61,7 @@ void
 
 **Example**
 
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts#L29-L36).
+See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts#L29-L36).
 
 ---
 
@@ -99,11 +69,11 @@ See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/moch
 
 Some test cases must rely on the timing between API requests. These test cases are likely to be [flaky](https://hackernoon.com/flaky-tests-a-war-that-never-ends-9aa32fdef359) if the timing is not managed with care.
 
-If the precision of the timing has to be less than a seconds, then mocha-concurrent-api-tests is not the right tool for this test case. For more guidance, see [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550).
+If the precision of the timing has to be less than a second, then concurrent-api-tests is not the right tool for this test case. For more guidance, see [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550).
 
 **Arguments**
 
-- delayInSeconds: The number of secondes to wait for. (Ex: 5).
+- delayInSeconds: The number of seconds to wait for. (Ex: 5).
 
 **Returns**
 
@@ -142,7 +112,7 @@ A function that perform lazy initialization of the shared fixture.
 
 **Example**
 
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L14).
+See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L14).
 
 ---
 
@@ -160,9 +130,9 @@ A function that perform lazy initialization of the shared fixture for a specific
 
 **Example**
 
-See [mocha-concurrent-api-tests example](https://github.com/VilledeMontreal/mocha-concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L16).
+See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L16).
 
-## Testing mocha-concurrent-api-tests itself
+## Testing concurrent-api-tests itself
 
 Run all unit tests, run this npm command:
 
@@ -170,4 +140,4 @@ Run all unit tests, run this npm command:
 
 Debug all unit tests, run this npm command:
 
-`npm run watch` (to activate incremental transpilation) and use the Visual Studio Code launcher **Debug**.
+`npm run watch-no-emit` (to activate incremental transpilation) and use the Visual Studio Code launcher **Debug**.
