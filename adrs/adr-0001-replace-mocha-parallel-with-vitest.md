@@ -10,10 +10,6 @@ superseded_by: ""
 
 # ADR-0001: Replace Mocha Parallel with Vitest for Concurrent API Testing
 
-## Status
-
-Accepted
-
 ## Context
 
 Legacy approach: Mocha + mocha.parallel for in-process spec-level concurrency. Issue: mocha.parallel is unmaintained (security & compatibility risk) and requires custom retry + logging hacks. We need an actively maintained runner with: native retries & full error stacks, strong TS DX, fast feedback (watch), easy reporter extension, minimal migration friction, and preservation of single-threaded concurrency & immutable shared setup.
