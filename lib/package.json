@@ -54,6 +54,6 @@
     "uuid": "13.0.0"
   },
   "bugs": {
-    "url": "https://github.com/VilledeMontreal/mocha-concurrent-api-tests/issues"
+    "url": "https://github.com/VilledeMontreal/concurrent-api-tests/issues"
   }
 }
