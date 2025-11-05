@@ -1,6 +1,9 @@
 {
   "name": "@villedemontreal/concurrent-api-tests",
   "version": "2.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Provides the core functions required to implement concurrent API tests with vitest.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
