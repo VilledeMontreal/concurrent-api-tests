@@ -8,9 +8,6 @@
     "strict": true,
     "strictNullChecks": false,
     "skipLibCheck": true,
-
-    // todo: remove when lib is used from registry
-    "noImplicitAny": false,
     // Avoid importing vitest in each test file
     "types": ["vitest/globals"]
   }
