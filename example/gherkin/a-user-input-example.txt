@@ -1,0 +1,13 @@
+This is a simplistic blogPost system used to demonstrate the concurrent api tests features.
+
+The system allows to create blog post with its title, content, keywords and author.
+
+For each blog post, the system keeps likeCount and commentCount as statistics.
+Note: this like/comment feature is not available yet, but the system still generate these statistics. There are zero like and comment after a blog post creation.
+
+The title a of blog post is required.
+
+The system allows for searching all blog posts related to a specific keyword.
+
+The system allows to create user with there role, fullname and email.
+

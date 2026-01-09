@@ -1,6 +1,6 @@
 module.exports = {
-  robotDictee: {
-    input: "./gherkins/robot-dictée/open-api.yaml",
+  blogPostSystem: {
+    input: "./test/shared/apiUnderTest/open-api.yaml",
     output: {
       target: "./test/shared/apiUnderTest/generated/api.ts",
       baseUrl: "https://echo.free.beeceptor.com",

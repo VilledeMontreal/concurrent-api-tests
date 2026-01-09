@@ -1,5 +1,5 @@
-import { dictationManagementApiTests } from "./dictation/dictationManagement.apiTest";
-import { dictationSelectionApiTests } from "./dictation/dictationSelection.apiTest";
+import { blogPostApiTests } from "./blogPosts/blogPost.apiTest";
+import { userApiTests } from "./users/user.apiTest";
 
-dictationManagementApiTests();
-dictationSelectionApiTests();
+blogPostApiTests();
+userApiTests();
