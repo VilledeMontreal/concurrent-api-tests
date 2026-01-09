@@ -2,6 +2,8 @@
 
 Your goal is to create one text file per feature with strict Gherkin exemples from the loose description written in natural language provided as `${input:textualDescription}`.
 
+All Gherkin feature files MUST be created in a `gherkin/` folder in the workspace root.
+
 ALWAYS ask questions to the user if:
 - the textual description provided as input is not clear 
 - the feature/rule breakdown is ambiguous 
