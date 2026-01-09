@@ -1,8 +1,0 @@
-# The code base is organized by feature, the config is organized by feature as well.
-blogPosts:
-  configExample: true
-users:
-  configExample: 32
-shared:
-  apiUnderTest:
-    apiBaseUrl: http://localhost:$port

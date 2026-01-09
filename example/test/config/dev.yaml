@@ -1,0 +1,3 @@
+shared:
+  apiUnderTest:
+    apiBaseUrl: "https://echo.free.beeceptor.com/concurrent-api-test"

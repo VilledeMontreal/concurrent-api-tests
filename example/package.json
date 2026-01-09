@@ -8,7 +8,8 @@
     "test-latest-stable": "env NODE_ENV=dev npm run compileAndTest",
     "compileAndTest": "vitest all --run",
     "flaky-test-report-example": "vitest flaky --run",
-    "lint-fix": "prettier --write . && eslint . --fix"
+    "lint-fix": "prettier --write . && eslint . --fix",
+    "generate-api-client": "orval"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,9 @@
   "author": "Stéphane Leblanc",
   "license": "MIT",
   "dependencies": {
-    "@villedemontreal/concurrent-api-tests": "2.0.1",
     "@types/chai": "5.2.3",
     "@types/config": "3.3.5",
+    "@villedemontreal/concurrent-api-tests": "2.0.1",
     "chai": "6.2.0",
     "config": "4.1.1",
     "vitest": "4.0.3"
@@ -30,6 +31,7 @@
     "eslint": "9.38.0",
     "globals": "^16.4.0",
     "jiti": "2.6.1",
+    "orval": "^7.17.2",
     "prettier": "3.6.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.2"

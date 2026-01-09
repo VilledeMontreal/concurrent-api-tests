@@ -1,0 +1,161 @@
+openapi: 3.0.0
+components:
+    examples: {}
+    headers: {}
+    parameters: {}
+    requestBodies: {}
+    responses: {}
+    schemas:
+        ApiError:
+            properties:
+                message:
+                    type: string
+            required:
+                - message
+            type: object
+            additionalProperties: false
+        BlogPost:
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                keywords:
+                    items:
+                        type: string
+                    type: array
+                content:
+                    type: string
+                likeCount:
+                    type: number
+                    format: double
+                commentCount:
+                    type: number
+                    format: double
+                authorId:
+                    type: string
+            required:
+                - id
+                - title
+                - keywords
+                - content
+                - likeCount
+                - commentCount
+                - authorId
+            type: object
+            additionalProperties: false
+        User:
+            properties:
+                id:
+                    type: string
+                role:
+                    type: string
+                fullName:
+                    type: string
+                email:
+                    type: string
+            required:
+                - id
+                - role
+                - fullName
+                - email
+            type: object
+            additionalProperties: false
+    securitySchemes: {}
+info:
+    title: concurrent-api-test-example-tsoa
+    version: 1.0.0
+    description: concurrent-api-test-example-tsoa
+    license:
+        name: ISC
+    contact:
+        name: 'Stéphane Leblanc'
+paths:
+    /blogPosts:
+        get:
+            operationId: searchBlogPosts
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: '#/components/schemas/BlogPost'
+                                type: array
+                default:
+                    description: Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiError'
+            tags:
+                - blogPosts
+            security: []
+            parameters:
+                -
+                    description: 'MUST be partitioned by theme, for testing purposes.'
+                    in: query
+                    name: theme
+                    required: true
+                    schema:
+                        type: string
+        post:
+            operationId: postBlogPost
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BlogPost'
+                default:
+                    description: Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiError'
+            tags:
+                - blogPosts
+            security: []
+            parameters: []
+            requestBody:
+                description: 'MUST be partitioned by Server-generated id for testing purposes.'
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BlogPost'
+                            description: 'MUST be partitioned by Server-generated id for testing purposes.'
+    /users:
+        post:
+            operationId: postUser
+            responses:
+                '200':
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                default:
+                    description: Error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiError'
+            tags:
+                - users
+            security: []
+            parameters: []
+            requestBody:
+                description: 'MUST be partitioned by Server-generated id for testing purposes.'
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/User'
+                            description: 'MUST be partitioned by Server-generated id for testing purposes.'
+servers:
+    -
+        url: 'https://api.montreal.ca/api/your-api-path'
+tags: []
