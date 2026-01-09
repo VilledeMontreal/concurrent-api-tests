@@ -1,6 +1,6 @@
 module.exports = {
   robotDictee: {
-    input: "./gherkins/robot-dictée/open-api.yaml",
+    input: "./test/shared/apiUnderTest/open-api.yaml",
     output: {
       target: "./test/shared/apiUnderTest/generated/api.ts",
       client: "fetch",
