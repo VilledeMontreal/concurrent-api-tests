@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: Blog Post API
+  description: |
+    A simplified Blog Post API for demonstrating the Spec-Driven Agentic Development workflow.
+    This API is a subset of the full blog post system described in concurrent-api-testing-guide.md.
+  version: 1.0.0
+
+paths:
+  /blog-posts:
+    post:
+      summary: Create a new blog post
+      description: |
+        Creates a new blog post with the provided content.
+        
+        **Data Partition**: MUST be partitioned by server-generated `id`.
+        The server generates a unique ID for each blog post, ensuring natural isolation between tests.
+      operationId: postBlogPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogPostRequest'
+      responses:
+        '201':
+          description: Blog post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: Search blog posts by keyword
+      description: |
+        Returns all blog posts that contain the specified keyword.
+        
+        **Data Partition**: MUST be partitioned by `keyword` query parameter (client-controlled field).
+        Each test should use a unique keyword to isolate its data from other tests.
+      operationId: getBlogPosts
+      parameters:
+        - name: keyword
+          in: query
+          required: true
+          description: |
+            Filter blog posts by keyword. Only posts containing this keyword will be returned.
+            For testing, use format: `${testRunId}-unique-keyword` to ensure isolation.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of matching blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogPost'
+
+  /blog-posts/{id}:
+    get:
+      summary: Get a blog post by ID
+      description: |
+        Retrieves a single blog post by its unique identifier.
+        
+        **Data Partition**: MUST be partitioned by server-generated `id` path parameter.
+      operationId: getBlogPostById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the blog post (server-generated)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Blog post found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+        '404':
+          description: Blog post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    BlogPostRequest:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: The title of the blog post. Required and cannot be empty.
+        content:
+          type: string
+          description: The main content/body of the blog post.
+        keywords:
+          type: array
+          items:
+            type: string
+          description: Keywords/tags for categorizing and searching the blog post.
+
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier (server-generated)
+        title:
+          type: string
+          description: The title of the blog post
+        content:
+          type: string
+          description: The main content/body of the blog post
+        keywords:
+          type: array
+          items:
+            type: string
+          description: Keywords/tags associated with the blog post
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the blog post was created (server-generated)
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Human-readable error message
