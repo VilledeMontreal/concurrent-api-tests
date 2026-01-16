@@ -53,6 +53,7 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST ensure there are no side effects between tests by using data parition to isolate each test cases from the other test cases.
 - [ ] MUST preserve visible Arrange–Act–Assert separation by skipping a line between each section.
 - [ ] MUST organise frequently used arrange, act and assert functions in *.fixture.ts files. See section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below.
+- [ ] Fixture functions MUST return the response body directly (not the full HTTP response) to improve test readability. For rare cases needing headers or status codes, create a separate fixture.
 - [ ] MUST avoid code duplication between *.fixture.ts files. One *.fixture.ts files can be reuse accross multiple `*.apiTest.ts` files.
 - [ ] MUST avoid using wait time to synchronise test case executions (ex: setTimeout). If unavoidable, you MUST ask for explicit user confirmation before using `aFewSeconds(delayInSeconds)` from `@villedemontreal/concurrent-api-tests` to address the race condition.
 - [ ] MUST not teardown, they are complex and useless since concurrent api tests CANNOT rely on preexisting mutable state.
@@ -99,7 +100,8 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST assert only attributes that are **meaningful for the behavior being tested**. Do NOT assert every field returned by the API.
 - [ ] MUST ask yourself: "What is this test verifying?" Only assert attributes that prove the behavior works correctly. PROHIBITED: Asserting attributes that are irrelevant to the test's purpose (e.g., asserting the keywords when testing that the title must not be empty).
 - [ ] MUST explicitly initialize every asserted field during arrange (only the meaningful ones).
-- [ ] MUST assert on explicit expected values for client-controlled attributes. DO NOT use variables for client-controlled values. For server-generated values (IDs, timestamps, etc.), using arrange response variables is acceptable and often necessary. Example: `assert.strictEqual(actual.body.title, "My Title")` is correct for client-controlled title. `assert.strictEqual(actual.body.title, request.title)` is WRONG because it creates circular logic. However, `assert.sameMembers(actual.body.map(x => x.id), [created1.body.id, created2.body.id])` is correct for server-generated IDs.
+- [ ] MUST assert on explicit expected values for client-controlled attributes. DO NOT use variables for client-controlled values. For server-generated values (IDs, timestamps, etc.), using arrange response variables is acceptable and often necessary. Example: `assert.strictEqual(actual.title, "My Title")` is correct for client-controlled title. `assert.strictEqual(actual.title, request.title)` is WRONG because it creates circular logic. However, `assert.sameMembers(actual.map(x => x.id), [created1.id, created2.id])` is correct for server-generated IDs.
+- [ ] MUST NOT assert on template default values. Always override fields to meaningful values before asserting on them. Example: `assert.strictEqual(actual.title, "titleDefault")` is WRONG because it asserts on a default value. Instead, set an explicit value in arrange and assert on that explicit value.
 - [ ] MUST NOT assert on status code if the response is a success (2xx)
 - [ ] an exception MUST be thrown if the response is not a success (2xx)
 - [ ] MUST use `shouldThrow(act, customAssert)` from `@villedemontreal/concurrent-api-tests` when an HTTP error is expected. See test case "Title is required" in section "2. Test File (*.apiTest.ts)" in "Implementation Patterns Reference" below.
@@ -147,7 +149,7 @@ export function blogPostApiTests() {
     
     // ✅ Basic test
     // data partitioned by blog post id (server-generated id)
-    // no need to arrage data partition because blog post id is a server-generated IDs
+    // no need to arrange data partition because blog post id is a server-generated ID
     it("Create", async () => {
       // arrange only what is meaningful for the test
       const request = copyBlogPostTemplate((x) => {
@@ -158,7 +160,8 @@ export function blogPostApiTests() {
       const actual = await postBlogPost(request);
 
       // Assert - use explicit expected values for client-controlled attributes
-      assert.strictEqual(actual.body.title, "Incredible story!");
+      // Note: fixtures return body directly, so no .body needed
+      assert.strictEqual(actual.title, "Incredible story!");
     });
 
     // ✅ Error case with shouldThrow
@@ -173,8 +176,8 @@ export function blogPostApiTests() {
         (err) => {
           // Error structure is defined in OpenAPI specification
           assert.strictEqual(err.status, 400);
-          assert.include(err.info.message, "title");
-          assert.include(err.info.message, "required");
+          assert.include(err.data.message, "title");
+          assert.include(err.data.message, "required");
         },
       );
     });
@@ -184,26 +187,26 @@ export function blogPostApiTests() {
     // each blog post created in the setup phase must be associated with the same unique keyword
     it("Search by keyword", async () => {
       const keyword = `${getTestRunId()}-a-keyword`;
-      // use promise.all when it makes the test faster without loosing readability or reliability
+      // use promise.all when it makes the test faster without losing readability or reliability
       const [blogPost1, blogPost2] = await Promise.all([
-        postBlogPost(copyBlogPostTemplate((x) => { 
-          x.title = "first"; 
-          x.keywords = [keyword]; 
+        postBlogPost(copyBlogPostTemplate((x) => {
+          x.title = "first";
+          x.keywords = [keyword];
         })),
-        postBlogPost(copyBlogPostTemplate((x) => { 
-          x.title = "second"; 
-          x.keywords = [keyword]; 
+        postBlogPost(copyBlogPostTemplate((x) => {
+          x.title = "second";
+          x.keywords = [keyword];
         }))
       ]);
 
       const actual = await getBlogPosts(keyword);
 
-      assert.strictEqual(actual.body.length, 2);
+      assert.strictEqual(actual.length, 2);
       // Server-generated IDs: response variables are acceptable
-      assert.sameMembers(actual.body.map((x) => x.id), [blogPost1.body.id, blogPost2.body.id]);
+      assert.sameMembers(actual.map((x) => x.id), [blogPost1.id, blogPost2.id]);
       // Client-controlled titles: use explicit values
-      assert.include(actual.body.map(x => x.title), "first");
-      assert.include(actual.body.map(x => x.title), "second");
+      assert.include(actual.map(x => x.title), "first");
+      assert.include(actual.map(x => x.title), "second");
     });
   });
 }
@@ -235,6 +238,32 @@ export const copyBlogPostWithEmptyContentTemplate = defineCopyTemplateVariation<
 );
 ```
 
+#### Nested Templates
+
+When requests contain complex nested objects, define a separate template for each nested type:
+
+```typescript
+// Template for nested object
+export const copyReferenceLinkTemplate = defineCopyTemplate<ReferenceLink>({
+  title: "titleDefault",
+  description: "descriptionDefault",
+  href: "https://www.href-default.com",
+});
+
+// Usage in tests - compose nested templates
+const request = copyBlogPostTemplate((x) => {
+  x.title = "A post with reference links";
+  x.referenceLinks = [
+    copyReferenceLinkTemplate((y) => {
+      y.href = "https://www.example.com";
+    }),
+    copyReferenceLinkTemplate((y) => {
+      y.href = "https://www.another.com";
+    }),
+  ];
+});
+```
+
 #### ❌ Template usage anti-pattern: Over-specified arrange (PROHIBITED)
 
 ```typescript
@@ -261,34 +290,83 @@ const request = copyBlogPostTemplate((x) => {
 
 ### 4. Fixture (*.fixture.ts)
 
-For arrange, act and assert functions with high potential for reuse:
+For arrange, act and assert functions with high potential for reuse.
+
+**Best practice:** Fixtures should return only the response body, not the full HTTP response. This improves readability by avoiding `.body.*` throughout tests. For rare cases needing headers or status codes, create a separate fixture returning the full response.
 
 ```typescript
 import { BlogPost, getBlogPosts as getBlogPostsApiClient, postBlogPost as postBlogPostApiClient } from "../shared/apiUnderTest/generated/api";
 
-// ✅ CORRECT: Use generated API client directly
+// ✅ CORRECT: Return body directly for cleaner test code
 export async function postBlogPost(request: BlogPost): Promise<BlogPost> {
-  return await postBlogPostApiClient(request);
+  const response = await postBlogPostApiClient(request);
+  return response.body;
 }
 
-export async function getBlogPosts(authorId: string): Promise<BlogPost[]> {
-  return await getBlogPostsApiClient({ authorId });
+export async function getBlogPosts(keyword: string): Promise<BlogPost[]> {
+  const response = await getBlogPostsApiClient({ keyword });
+  return response.body;
 }
+```
+
+#### Validation Error Assertion Helper
+
+Extract common error assertion logic for type safety and reuse:
+
+```typescript
+// test/shared/validation.fixture.ts
+import { assert } from "chai";
+import { ApiErrorResponse } from "../apiUnderTest/generated/api";
+
+export function assertValidationError(err: any): ApiErrorResponse {
+  assert.strictEqual(err.status, 400);
+  assert.exists(err.data);
+  return err.data as ApiErrorResponse;  // Type-safe after assertion
+}
+
+// Usage in tests
+await shouldThrow(
+  () => postBlogPost(request),
+  (err) => {
+    const validationError = assertValidationError(err);
+    assert.include(validationError.message, "title");
+  }
+);
 ```
 
 #### Shared Immutable Fixture
 
-For sharing immutable state between tests:
+For sharing immutable state between tests. Common use case: JWT tokens that are read-only during test execution.
 
 ```typescript
 import { defineGetSharedFixture, defineGetSharedFixtureByKey } from "@villedemontreal/concurrent-api-tests";
 
 // Single shared fixture - created once per test run
-export const getImmutableGuessUser = defineGetSharedFixture<User>(() => createUser("guess"));
+export const getImmutableGuestUser = defineGetSharedFixture<User>(() => createUser("guest"));
 
-// Shared fixture by key - one per unique key
-export const getImmutableUser = defineGetSharedFixtureByKey<string, User>((role) => createUser(role));
+// Shared fixture by key - one per unique key (e.g., JWT token per role)
+export const getJwtTokenFor = defineGetSharedFixtureByKey<UserRole, JwtToken>(
+  (role) => fetchJwtToken(role)  // Authenticates once per role, caches result
+);
+
+// Usage in fixture - each feature sets its own default role
+export async function postBlogPost(request: BlogPost, role: UserRole = "admin") {
+  const jwtToken = await getJwtTokenFor(role);
+  const response = await postBlogPostApiClient(request, { headers: { Authorization: `Bearer ${jwtToken}` } });
+  return response.body;
+}
+
+// Usage in tests
+it("Editor can create blog post", async () => {
+  const request = copyBlogPostTemplate((x) => { x.title = "Editor Post"; });
+
+  const actual = await postBlogPost(request, "editor");
+
+  assert.strictEqual(actual.title, "Editor Post");
+});
 ```
+
+**Important:** Only share truly immutable data. JWT tokens are safe because tests read them, never modify them.
 
 ---
 
@@ -319,7 +397,7 @@ it.each([
 
   const actual = await postOrder(request);
 
-  assert.strictEqual(actual.body.total, expectedTotal);
+  assert.strictEqual(actual.total, expectedTotal);
 });
 ```
 
