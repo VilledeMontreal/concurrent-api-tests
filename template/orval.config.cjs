@@ -1,5 +1,5 @@
 module.exports = {
-  robotDictee: {
+  apiUnderTest: {
     input: "./test/shared/apiUnderTest/open-api.yaml",
     output: {
       target: "./test/shared/apiUnderTest/generated/api.ts",
