@@ -461,35 +461,50 @@ assert.strictEqual(fetched.id, created.id);
 
 When multiple tests need the same arrange, act or assert functions, extract it to a fixture file. This keeps tests focused and reduces duplication.
 
-### Example 1 - Frequently used assertion
+### Example 1 - Validation error assertion with type safety
 
-Imagine the assertBlogPostIsSeoFriendly() functions is required in 25 tests accross 4 .apiTest files.
+A common pattern is asserting that an API returns a validation error (HTTP 400). Without a fixture, you repeat the same checks and lose type safety:
 
 ```typescript
-// blogPost.fixture.ts
-export function assertBlogPostIsSeoFriendly(post: BlogPost) {
-  assert.isAtLeast(post.keywords.length, 3, "Post must have at least 3 keywords for SEO");
-  assert.include(
-    post.title.toLowerCase(), 
-    post.keywords[0].toLowerCase(),
-    "First keyword must appear in title for SEO"
-  );
-}
-
-// Used in multiple test files
-it("Published blog post is SEO friendly", async () => {
-  const request = copyBlogPostTemplate((x) => {
-    x.title = "JavaScript performance tips";
-    x.keywords = ["javascript", "performance", "optimization"];
-  });
-
-  const actual = await postBlogPost(request);
-
-  assertBlogPostIsSeoFriendly(actual);
-});
+// ❌ Without fixture — repetitive, no type safety
+await shouldThrow(
+  () => postBlogPost(request),
+  (err) => {
+    assert.strictEqual(err.status, 400);
+    assert.include(err.message, "title");
+  }
+);
 ```
 
-**Remember**: Only create assertion fixtures when the same assertion is needed across multiple test files. For test-specific logic, keep it inline in the test.
+Extract this to a shared fixture that validates the error structure and returns a typed object:
+
+```typescript
+// test/shared/validation.fixture.ts
+export function assertValidationError(err: any): ApiErrorResponse {
+  // Verify this is indeed a validation error
+  assert.strictEqual(err.status, 400);
+  assert.exists(err.data);
+
+  // Explicit type cast to benefit from type safety afterward
+  return err.data as ApiErrorResponse;
+}
+```
+
+Now tests are cleaner and benefit from type safety after the assertion:
+
+```typescript
+// ✅ With fixture — cleaner, type-safe
+await shouldThrow(
+  () => postBlogPost(request),
+  (err) => {
+    const validationError = assertValidationError(err);
+    // Type safety: validationError is ApiErrorResponse
+    assert.include(validationError.message, "title");
+  }
+);
+```
+
+**Why this belongs in `test/shared/`**: Validation error handling is a cross-cutting concern used across all features, not specific to any single feature.
 
 ### Example 2 - Managing JWT token for many fake users
 
