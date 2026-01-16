@@ -1,4 +1,38 @@
-export type ErrorType<Error> = Error;
+export class ApiResponseError<TData = unknown> extends Error {
+  constructor(
+    public data: TData,
+    public status: number,
+    public headers: Headers
+  ) {
+    const message =
+      typeof data === "object" && data && "message" in data
+        ? String((data as { message: unknown }).message)
+        : typeof data === "string"
+          ? data
+          : "API Error";
+    super(message);
+    this.name = "ApiResponseError";
+  }
+}
+
+export function isApiResponseError<TError>(
+  error: unknown
+): error is ApiResponseError<TError> {
+  return error instanceof ApiResponseError;
+}
+
+export type ErrorType<T> = ApiResponseError<T>;
+
+const parseBody = (body: string | null): unknown => {
+  if (!body) return { message: "Unknown error" };
+
+  try {
+    return JSON.parse(body);
+  } catch {
+    // Body is a plain string, not JSON
+    return { message: body };
+  }
+};
 
 export const customFetch = async <T>(
   url: string,
@@ -9,12 +43,8 @@ export const customFetch = async <T>(
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
   if (!res.ok) {
-    const err: globalThis.Error & { info?: any; status?: number } =
-      new globalThis.Error();
-    const data = body ? JSON.parse(body) : {};
-    err.info = data;
-    err.status = res.status;
-    throw err;
+    const errorData = parseBody(body);
+    throw new ApiResponseError(errorData, res.status, res.headers);
   }
 
   const data = body ? JSON.parse(body) : {};
