@@ -223,7 +223,7 @@ dataPartitions:
     type: client-controlled
     field: keyword
     location: query
-    dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
+    dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
 
   GET /blog-posts/{id}:
     type: server-generated
@@ -249,8 +249,8 @@ dataPartitions:
 2. **If `type: client-controlled`** — Copy the `dataPartitionKeyTemplate` and customize the suffix for your test:
 
 ```typescript
-// data-partitions.yaml says: dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
-// In your test, replace "my-keyword" with something meaningful:
+// data-partitions.yaml says: dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
+// In your test, replace "meaningful-keyword" with something meaningful:
 const keyword = `${getTestRunId()}-electronics-search`;
 ```
 

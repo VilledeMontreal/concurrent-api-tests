@@ -17,7 +17,7 @@ dataPartitions:
     type: client-controlled
     field: keyword
     location: query
-    dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
+    dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
 
   GET /blog-posts/{id}:
     type: server-generated
