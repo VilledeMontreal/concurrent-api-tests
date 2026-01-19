@@ -198,7 +198,68 @@ While adding features solely for testing isn't ideal, **it's acceptable to make 
 
 ### Documenting Data Partitions
 
-**The key is knowing which fields control what data gets returned by your API.** Document the data partition strategy for each endpoint in a `data-partition.yaml` file. This communicates to the team which partition field should be used for each endpoint and ensures consistent isolation across all tests.
+**The key is knowing which fields control what data gets returned by your API.** Document the data partition strategy for each endpoint in a `data-partitions.yaml` file. This communicates to the team which partition field should be used for each endpoint and ensures consistent isolation across all tests.
+
+#### The data-partitions.yaml File
+
+Create this file alongside your OpenAPI spec (e.g., in `test/shared/apiUnderTest/`). It serves as the single source of truth for how each endpoint achieves test isolation.
+
+**Structure:**
+
+```yaml
+# Data Partition Strategy
+#
+# Partition Types:
+#   - server-generated: The server creates a unique identifier (automatic isolation)
+#   - client-controlled: The test must provide a unique value (use getTestRunId() prefix)
+
+dataPartitions:
+  POST /blog-posts:
+    type: server-generated
+    field: id
+    location: response.body
+
+  GET /blog-posts:
+    type: client-controlled
+    field: keyword
+    location: query
+    dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
+
+  GET /blog-posts/{id}:
+    type: server-generated
+    field: id
+    location: path
+```
+
+**Fields explained:**
+
+| Field | Description |
+|-------|-------------|
+| `type` | Either `server-generated` (automatic isolation) or `client-controlled` (you must ensure uniqueness) |
+| `field` | The name of the field used for partitioning |
+| `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` |
+| `dataPartitionKeyTemplate` | **Required for client-controlled only.** Shows the exact pattern to use in tests |
+
+#### How to Use It
+
+**Before writing a test**, look up the endpoint in `data-partitions.yaml`:
+
+1. **If `type: server-generated`** — No special action needed. The server returns a unique ID; use it for subsequent operations.
+
+2. **If `type: client-controlled`** — Copy the `dataPartitionKeyTemplate` and customize the suffix for your test:
+
+```typescript
+// data-partitions.yaml says: dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
+// In your test, replace "my-keyword" with something meaningful:
+const keyword = `${getTestRunId()}-electronics-search`;
+```
+
+#### Why This Matters
+
+- **Onboarding**: New team members instantly know how to isolate their tests
+- **Consistency**: Everyone uses the same partitioning strategy for each endpoint
+- **Code reviews**: Reviewers can verify tests follow the documented strategy
+- **Prevents bugs**: No more guessing which field to use for isolation
 
 ### Practical Consequence: Teardown Is Optionnal
 Because each test operates on isolated data with unique identifiers, cleanup during test execution is unnecessary. Tests don't interfere with each other, so there's no need to delete what was created.
