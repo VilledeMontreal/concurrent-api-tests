@@ -198,7 +198,7 @@ While adding features solely for testing isn't ideal, **it's acceptable to make 
 
 ### Documenting Data Partitions
 
-**The key is knowing which fields control what data gets returned by your API.** Document the data partition strategy for each endpoint in a `data-partition.md` file. This communicates to the team which partition field should be used for each endpoint and ensures consistent isolation across all tests.
+**The key is knowing which fields control what data gets returned by your API.** Document the data partition strategy for each endpoint in a `data-partition.yaml` file. This communicates to the team which partition field should be used for each endpoint and ensures consistent isolation across all tests.
 
 ### Practical Consequence: Teardown Is Optionnal
 Because each test operates on isolated data with unique identifiers, cleanup during test execution is unnecessary. Tests don't interfere with each other, so there's no need to delete what was created.
