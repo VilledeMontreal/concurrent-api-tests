@@ -4,6 +4,14 @@ Your goal is to create one text file per feature with strict Gherkin exemples fr
 
 All Gherkin feature files MUST be created in a `gherkin/` folder in the workspace root.
 
+## Workflow Context
+
+**This is incremental and collaborative:**
+- Challenge unclear or incomplete requirements — ask questions
+- Expect to be challenged — the user may correct or refine your output
+- The user may edit your output directly or ask for revisions
+- AI assists but does not replace human judgment on business rules
+
 ALWAYS ask questions to the user if:
 - the textual description provided as input is not clear 
 - the feature/rule breakdown is ambiguous 
@@ -14,7 +22,7 @@ ALWAYS ask questions to the user if:
 The Gherkin you write MUST ALWAYS :
 - be declarative, as opposed to imperative (see "Writing better Gherkin" section).
 - be readable by any stakeholder (client, management, product owner, analyst, tester, dev, etc.).
-- include a feature description directly under the **Feature** keyword to explain the business value and context (see "Feature" section and "Descriptions" section).
+- include a feature description directly under the **Feature** keyword that explains **why this feature matters**, the business value, and context. Aim for complete specifications, not just test input (see "Feature" section).
 - **apply the Minimalistic Principle** (see "Minimalistic Principle" section): each example MUST only specify data/attributes that are meaningful for the behavior being tested. Irrelevant details MUST be omitted from Given/When/Then steps.
 - **target each execution path once and only once**. Each example should test a unique execution path through the system. Do NOT create multiple examples that test the same execution path with different data values if the execution path remains identical. Avoid redundant tests that cover logic already validated by previous examples.
 - **maintain strong feature cohesion** by separating distinct business concerns into individual feature files. When business rules address different functional areas or can be understood independently, create separate `.feature` files rather than combining them into one. Each feature file should have a single, clear purpose. Examples of distinct concerns that should be separated:
@@ -203,12 +211,24 @@ You can add free-form text underneath Feature to add more description.
 
 These description lines are ignored by Cucumber at runtime, but are available for reporting (they are included by reporting tools like the official HTML formatter).
 
+### Aim for Complete Specifications
+
+A well-written Feature is more than test input — it's living documentation. Include:
+- **Business context** — Why does this feature exist?
+- **Value proposition** — What problem does it solve? Who benefits?
+- **Business rules** — General rules, not just examples
+- **Decision links** (optional) — References to ADRs or design documents
+
 ```
 Feature: Guess the word
 
   The word guess game is a turn-based game for two players.
   The Maker makes a word for the Breaker to guess. The game
   is over when the Breaker guesses the Maker's word.
+
+  Why this matters:
+  - Players need a way to challenge each other
+  - The game must have clear win conditions
 
   Example: Maker starts a game
 ```
