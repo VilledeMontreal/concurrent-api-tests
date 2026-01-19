@@ -9,7 +9,7 @@ module.exports = {
       prettier: true,
       override: {
         mutator: {
-          path: "./test/shared/apiUnderTest/mutator.ts",
+          path: "./test/shared/apiUnderTest/tooling/mutator.ts",
           default: true,
         },
       },

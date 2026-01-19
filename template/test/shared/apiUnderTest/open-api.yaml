@@ -94,7 +94,7 @@ paths:
             security: []
             parameters:
                 -
-                    description: 'MUST be partitioned by theme, for testing purposes.'
+                    description: 'Filter blog posts by theme.'
                     in: query
                     name: theme
                     required: true
@@ -120,13 +120,11 @@ paths:
             security: []
             parameters: []
             requestBody:
-                description: 'MUST be partitioned by Server-generated id for testing purposes.'
                 required: true
                 content:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/BlogPost'
-                            description: 'MUST be partitioned by Server-generated id for testing purposes.'
     /users:
         post:
             operationId: postUser
@@ -148,13 +146,11 @@ paths:
             security: []
             parameters: []
             requestBody:
-                description: 'MUST be partitioned by Server-generated id for testing purposes.'
                 required: true
                 content:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/User'
-                            description: 'MUST be partitioned by Server-generated id for testing purposes.'
 servers:
     -
         url: 'https://api.montreal.ca/api/your-api-path'

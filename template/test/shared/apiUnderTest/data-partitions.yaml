@@ -1,0 +1,25 @@
+# Data Partition Strategy
+#
+# This file documents how each API endpoint achieves test isolation.
+# Use this as reference when writing concurrent API tests.
+#
+# Partition Types:
+#   - server-generated: The server creates a unique identifier (automatic isolation)
+#   - client-controlled: The test must provide a unique value (use getTestRunId() prefix)
+
+dataPartitions:
+  POST /blog-posts:
+    type: server-generated
+    field: id
+    location: response.body
+
+  GET /blog-posts:
+    type: client-controlled
+    field: keyword
+    location: query
+    dataPartitionKeyTemplate: ${getTestRunId()}-my-keyword
+
+  GET /blog-posts/{id}:
+    type: server-generated
+    field: id
+    location: path

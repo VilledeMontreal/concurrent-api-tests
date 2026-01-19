@@ -5,9 +5,9 @@
  * concurrent-api-test-example-tsoa
  * OpenAPI spec version: 1.0.0
  */
-import searchBlogPostsMutator from "../mutator";
-import postBlogPostMutator from "../mutator";
-import postUserMutator from "../mutator";
+import searchBlogPostsMutator from "../tooling/mutator";
+import postBlogPostMutator from "../tooling/mutator";
+import postUserMutator from "../tooling/mutator";
 export interface ApiError {
   message: string;
 }
@@ -31,7 +31,7 @@ export interface User {
 
 export type SearchBlogPostsParams = {
   /**
-   * MUST be partitioned by theme, for testing purposes.
+   * Filter blog posts by theme.
    */
   theme: string;
 };
