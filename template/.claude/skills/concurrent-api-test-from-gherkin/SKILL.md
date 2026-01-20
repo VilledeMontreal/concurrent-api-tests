@@ -1,9 +1,14 @@
+---
+name: concurrent-api-test-from-gherkin
+description: Create reliable concurrent API tests from Gherkin feature files using vitest and @villedemontreal/concurrent-api-tests
+---
+
 # Concurrent API tests from Gherkin features
 
 ## Outline
 Your goal is to create reliable and maintainable concurrent api tests to verify that the system behavior respect the Gherkin feature description provided as input.
 
-Your first step is always to deeply analyse the Gherkin feature files, the OpenAPI specification, and the `data-partitions.yaml` file to understand the feature you need to generate the test for. 
+Your first step is always to deeply analyse the Gherkin feature files, the OpenAPI specification, and the `data-partitions.yaml` file to understand the feature you need to generate the test for.
 
 The API MUST be tested at the API level. Tests arrange, act, assert solely via HTTP/API calls (black‑box). The tests CANNOT rely on preexisting mutable state; each constructs and owns a fresh data partition (unique ids) that ensure there will be no side-effects between tests. Concurrency is mandatory: every test MUST be runnable alongside others without side effects. Shared mutable state and inter-test ordering dependencies are PROHIBITED. Teardown during test execution is unnecessary (isolation guarantees); resource cleanup MAY occur out of band strictly for capacity reasons to control storage/quotas. Reliability ALWAYS supersedes marginal execution time improvements.
 
@@ -11,7 +16,7 @@ You MUST ALWAYS stop and ask questions to the user if:
 - The Gherkin feature files cannot be found or are invalid.
 - The OpenAPI specification cannot be found or are invalid (located at /test/shared/apiUnderTest/open-api.yaml by convention).
 - The `data-partitions.yaml` file cannot be found or is invalid (located at /test/shared/apiUnderTest/data-partitions.yaml by convention).
-- The test cases identified during the planing will not yield a strong confidence that the system under test is working properly and respect the expected system behaviour. 
+- The test cases identified during the planing will not yield a strong confidence that the system under test is working properly and respect the expected system behaviour.
 - Data partitioning strategy is not documented in `data-partitions.yaml` for the endpoint under test
 - Avoiding race conditions is impossible
 
@@ -37,7 +42,7 @@ Data partitioning is the mechanism that enables concurrent test execution withou
 
 You MUST respect each point of the implementation compliance checklist.
 
-### ⛔ CRITICAL REQUIREMENTS
+### CRITICAL REQUIREMENTS
 Before returning your response, think hard and try to find item of the check list that are not respected. Fix them returning your response.
 
 ## API Test Implementation Compliance Checklist
@@ -69,7 +74,7 @@ Before returning your response, think hard and try to find item of the check lis
 
 ### Arrange (Minimalistic Principle)
 
-> ⚠️ **STOP before writing each test and answer these questions:**
+> **STOP before writing each test and answer these questions:**
 > 1. What specific behavior is this test verifying?
 > 2. Which attributes directly prove this behavior works?
 > 3. What is the data partition strategy for this endpoint (from `data-partitions.yaml`)?
@@ -83,7 +88,7 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST avoid reliance on preexisting state.
 - [ ] MUST not use setup, they are prohibited in order favor isolation of concurrent tests.
 - [ ] MUST arrange only through public HTTP endpoints. Never internal databases or components in order to preserve black‑box guarantees and enabling refactors.
-- [ ] MUST organise template with defaults values in *.template.ts files. 
+- [ ] MUST organise template with defaults values in *.template.ts files.
 - [ ] MUST use `defineCopyTemplate(template)` from `@villedemontreal/concurrent-api-tests` to define template. See copyBlogPostTemplate example in section "3. Template (*.template.ts)" in "Implementation Patterns Reference" below.
 - [ ] MUST keep template defaults clearly artificial yet valid.
 - [ ] MUST use `defineCopyTemplateVariation(originalCopyTemplate, variation)` from `@villedemontreal/concurrent-api-tests` to avoid duplication when the same template is used in 5+ test cases. See copyBlogPostWithEmptyContentTemplate example in section "3. Template (*.template.ts)" in "Implementation Patterns Reference" below. Do not overuse, in doubt rely only on defineCopyTemplate + override in each test.
@@ -96,7 +101,7 @@ Before returning your response, think hard and try to find item of the check lis
 
 ### Assert (Minimalistic Principle)
 
-> ⚠️ **STOP before writing assertions:**
+> **STOP before writing assertions:**
 > 1. Am I asserting ONLY what proves this specific behavior works?
 > 2. Am I using EXPLICIT values (not variables) for client-controlled data?
 > 3. Have I avoided asserting irrelevant fields?
@@ -128,9 +133,9 @@ test/
 │   └── apiUnderTest/
 │       ├── open-api.yaml           # OpenAPI specification (project-specific)
 │       ├── data-partitions.yaml    # Data partition strategy for each endpoint (project-specific)
-│       ├── generated/              # Auto-generated API client ⚠️ NEVER edit manually
+│       ├── generated/              # Auto-generated API client NEVER edit manually
 │       └── tooling/                # Code generation scripts (adapt if needed)
-└── {feature}/ # ⚠️ Folder and file name MUST be in English
+└── {feature}/ # Folder and file name MUST be in English
     ├── {feature}.apiTest.ts    # Tests (describe/it)
     ├── {feature}.fixture.ts    # Arrange/Act helpers
     └── {feature}.template.ts   # Request templates
@@ -143,18 +148,18 @@ test/
 > **Note:** The examples below include explanatory comments for learning purposes. Generated test code should NOT include data partition comments since that information is already in `data-partitions.yaml`.
 
 ```typescript
-// ✅ File: blogPost.apiTest.ts (English name)
+// File: blogPost.apiTest.ts (English name)
 import { shouldThrow, getTestRunId } from "@villedemontreal/concurrent-api-tests";
 import { assert } from "chai";
-import { postBlogPost, getBlogPosts } from "./blogPost.fixture";  // ✅ English names
-import { copyBlogPostTemplate } from "./blogPost.template";        // ✅ English names
+import { postBlogPost, getBlogPosts } from "./blogPost.fixture";  // English names
+import { copyBlogPostTemplate } from "./blogPost.template";        // English names
 
-// ✅ Function name in English
+// Function name in English
 export function blogPostApiTests() {
-  // ✅ describe() and it() strings match Gherkin language
+  // describe() and it() strings match Gherkin language
   describe("BlogPosts", () => {
-    
-    // ✅ Basic test
+
+    // Basic test
     // data partitioned by blog post id (server-generated id)
     // no need to arrange data partition because blog post id is a server-generated ID
     it("Create", async () => {
@@ -171,7 +176,7 @@ export function blogPostApiTests() {
       assert.strictEqual(actual.title, "Incredible story!");
     });
 
-    // ✅ Error case with shouldThrow
+    // Error case with shouldThrow
     // data partitioned by blog post id (server-generated id)
     it("Title is required", async () => {
       const request = copyBlogPostTemplate((x) => {
@@ -189,7 +194,7 @@ export function blogPostApiTests() {
       );
     });
 
-    // ✅ Searching a list, using a filter for data partition
+    // Searching a list, using a filter for data partition
     // data partitioned by keyword (client-controlled field)
     // each blog post created in the setup phase must be associated with the same unique keyword
     it("Search by keyword", async () => {
@@ -271,25 +276,25 @@ const request = copyBlogPostTemplate((x) => {
 });
 ```
 
-#### ❌ Template usage anti-pattern: Over-specified arrange (PROHIBITED)
+#### Template usage anti-pattern: Over-specified arrange (PROHIBITED)
 
 ```typescript
 // Test: "Title is required"
-// ❌ WRONG - title and difficulty are NOT meaningful for testing single-word behavior
+// WRONG - title and difficulty are NOT meaningful for testing single-word behavior
 const request = copyBlogPostTemplate((x) => {
-  x.title = null;                    // ✅ Meaningful (required title is the behavior under test)
-  x.content = "Lorem ipsum...";      // ❌ PROHIBITED - not meaningful for this test
-  x.keywords = ["testing", "api"];   // ❌ PROHIBITED - not meaningful for this test
+  x.title = null;                    // Meaningful (required title is the behavior under test)
+  x.content = "Lorem ipsum...";      // PROHIBITED - not meaningful for this test
+  x.keywords = ["testing", "api"];   // PROHIBITED - not meaningful for this test
 });
 ```
 
-#### ✅ Correct: Minimalistic arrange
+#### Correct: Minimalistic arrange
 
 ```typescript
 // Test: "Title is required"
-// ✅ CORRECT - only meaningful attributes are overridden
+// CORRECT - only meaningful attributes are overridden
 const request = copyBlogPostTemplate((x) => {
-  x.title = null;                    // ✅ Meaningful (required title is the behavior under test)
+  x.title = null;                    // Meaningful (required title is the behavior under test)
 });
 ```
 
@@ -304,7 +309,7 @@ For arrange, act and assert functions with high potential for reuse.
 ```typescript
 import { BlogPost, getBlogPosts as getBlogPostsApiClient, postBlogPost as postBlogPostApiClient } from "../shared/apiUnderTest/generated/api";
 
-// ✅ CORRECT: Return body directly for cleaner test code
+// CORRECT: Return body directly for cleaner test code
 export async function postBlogPost(request: BlogPost): Promise<BlogPost> {
   const response = await postBlogPostApiClient(request);
   return response.body;

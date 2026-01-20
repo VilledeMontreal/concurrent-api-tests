@@ -1,3 +1,8 @@
+---
+name: gherkin-from-text
+description: Create Gherkin feature files from natural language descriptions
+---
+
 # Gherkin from text
 
 Your goal is to create one text file per feature with strict Gherkin exemples from the loose description written in natural language provided by the user.
@@ -13,8 +18,8 @@ All Gherkin feature files MUST be created in a `gherkin/` folder in the workspac
 - AI assists but does not replace human judgment on business rules
 
 ALWAYS ask questions to the user if:
-- the textual description provided as input is not clear 
-- the feature/rule breakdown is ambiguous 
+- the textual description provided as input is not clear
+- the feature/rule breakdown is ambiguous
 - the feature/rule is poor and need to be challenged
 - the textual description contains UX-specific details (colors, fonts, visual positioning, animations, specific UI elements, layout details). You MUST ask the user if these details must be ommited in the Gherkin or if they must be included as distinct file/feature. DO NOT create UX files without explicit user confirmation.
 
@@ -35,9 +40,9 @@ The Gherkin you write MUST ALWAYS :
 - use the keyword "Exemple" (or its equivalent in the target language) instead of "Scenario" for individual test cases.
 
 - only describe functionnal requirements. Do NOT describe non functionnal requirements (ex: response times, availability, etc.).
-- be written in the same language as the one provided as input. 
+- be written in the same language as the one provided as input.
 Ex: if the input is in french, the generated Gherkin is in french
-- respect the official translation of Gherkin keywords. 
+- respect the official translation of Gherkin keywords.
 If the language is not english, find the translation in the "Language" section. Stop without completing your job if the language is not found. Do NOT guess or infer translations.
 - ommit the language directive (e.g., "# language: fr") at the beginning of the file.
 - use precise, explicit, and unambiguous language.
@@ -73,9 +78,9 @@ instead of:
 
 The first example, **When "Bob" logs in**, is a *functional requirement*. The second, much longer, example is a *procedural reference*. Functional requirements are features, but procedures belong in the implementation details.
 
-That way, when the implementation of a feature changes, you'll only need to change the process steps behind the scenes. The behaviour does not have to change just because the implementation does. In fact, a good question to ask yourself when writing a feature clause is: “Will this wording need to change if the implementation does?”.
+That way, when the implementation of a feature changes, you'll only need to change the process steps behind the scenes. The behaviour does not have to change just because the implementation does. In fact, a good question to ask yourself when writing a feature clause is: "Will this wording need to change if the implementation does?".
 
-If the answer is “Yes”, then you should rework it avoiding implementation specific details. As a side benefit, in consequence your scenarios will be a lot shorter and much easier to follow and understand.
+If the answer is "Yes", then you should rework it avoiding implementation specific details. As a side benefit, in consequence your scenarios will be a lot shorter and much easier to follow and understand.
 
 ### Consider a more declarative style
 One way to make scenarios easier to maintain and less brittle is to use a declarative style. Declarative style describes the behaviour of the application, rather than the implementation details. Declarative scenarios read better as "living documentation". A declarative style helps you focus on the value that the customer is getting, rather than the keystrokes they will use.
@@ -85,10 +90,10 @@ Imperative tests communicate details, and in some contexts this style of test is
 Here's an example of a feature in an imperative style:
 
 ```
-Feature: Subscribers see different articles based on their subscription level 
+Feature: Subscribers see different articles based on their subscription level
 
 Scenario: Free subscribers see only the free articles
-  Given users with a free subscription can access "FreeArticle1" but not "PaidArticle1" 
+  Given users with a free subscription can access "FreeArticle1" but not "PaidArticle1"
   When I type "freeFrieda@example.com" in the email field
   And I type "validPassword123" in the password field
   And I press the "Submit" button
@@ -100,7 +105,7 @@ Scenario: Subscriber with a paid subscription can access "FreeArticle1" and "Pai
   When I type "paidPattya@example.com" in the email field
   And I type "validPassword123" in the password field
   And I press the "Submit" button
-  Then I see "FreeArticle1" and "PaidArticle1" on the home page  
+  Then I see "FreeArticle1" and "PaidArticle1" on the home page
 ```
 
 Each step is a precise instruction. The inputs and expected results are specified exactly. But it's easy to imagine changes to the application which would require changing these tests. The available options for free versus paid subscriptions can change. Even the means of logging in could change. What if, in the future, users log in with a voice interface or a thumbprint?
@@ -109,7 +114,7 @@ A more declarative style hides the details of how the application's capabilities
 
 ```
 Feature: Subscribers see different articles based on their subscription level
- 
+
 Scenario: Free subscribers see only the free articles
   Given Free Frieda has a free subscription
   When Free Frieda logs in with her valid credentials
@@ -121,11 +126,11 @@ Scenario: Subscriber with a paid subscription can access both free and paid arti
   Then she sees a Free article and a Paid article
 ```
 
-With a declarative style, each step communicates an idea, but the exact values aren't specified. The details of how the user interacts with the system, such as which specific articles are free or paid, and the subscription level of different test users, are specified in the step definitions (the automation code that interacts with the system). The subscription packages could change in the future. The business could change what content is available to subscribers on free and paid plans, without having to change this scenario and other scenarios that use the same step definitions. If another subscription level is added later, it's easy to add a scenario for that. By avoiding terms like “click a button” that suggest implementation, the scenario is more resilient to implementation details of the UI. The intent of the scenario remains the same, even if the implementation changes later. In addition, having too many implementation details in a scenario, makes it harder to understand the intended behaviour it illustrates.
+With a declarative style, each step communicates an idea, but the exact values aren't specified. The details of how the user interacts with the system, such as which specific articles are free or paid, and the subscription level of different test users, are specified in the step definitions (the automation code that interacts with the system). The subscription packages could change in the future. The business could change what content is available to subscribers on free and paid plans, without having to change this scenario and other scenarios that use the same step definitions. If another subscription level is added later, it's easy to add a scenario for that. By avoiding terms like "click a button" that suggest implementation, the scenario is more resilient to implementation details of the UI. The intent of the scenario remains the same, even if the implementation changes later. In addition, having too many implementation details in a scenario, makes it harder to understand the intended behaviour it illustrates.
 
 ## Minimalistic Principle
 
-> ⚠️ **CRITICAL**: Over-specification makes Gherkin harder to read, understand, and maintain. Irrelevant details obscure the business intent and create noise that distracts stakeholders from the actual behavior being documented.
+> **CRITICAL**: Over-specification makes Gherkin harder to read, understand, and maintain. Irrelevant details obscure the business intent and create noise that distracts stakeholders from the actual behavior being documented.
 
 Each example MUST only include details that are **meaningful for the specific behavior being documented**. Ask yourself for each detail:
 1. "Is this detail essential to understand this specific behavior?"
@@ -136,7 +141,7 @@ If the answer is "No" to either question, **omit the detail**.
 ### Given steps
 Only specify preconditions that are **meaningful for the behavior being documented**. Do NOT include irrelevant context.
 
-**❌ Over-specified Given (PROHIBITED):**
+**Over-specified Given (PROHIBITED):**
 ```gherkin
 Exemple: Title is required when creating a blog post
   Given a user "John Doe" with email "john@example.com" and role "author"
@@ -147,7 +152,7 @@ Exemple: Title is required when creating a blog post
   Then the creation fails with error "Title is required"
 ```
 
-**✅ Minimalistic Given (CORRECT):**
+**Minimalistic Given (CORRECT):**
 ```gherkin
 Exemple: Title is required when creating a blog post
   When a user creates a blog post without a title
@@ -157,7 +162,7 @@ Exemple: Title is required when creating a blog post
 ### Then steps
 Only verify outcomes that are **meaningful for the behavior being documented**. Do NOT include irrelevant attributes.
 
-**❌ Over-specified Then (PROHIBITED):**
+**Over-specified Then (PROHIBITED):**
 ```gherkin
 Exemple: Create a draft blog post
   When a user creates a draft blog post with title "My Draft"
@@ -171,7 +176,7 @@ Exemple: Create a draft blog post
   And the view count is 0
 ```
 
-**✅ Minimalistic Then (CORRECT):**
+**Minimalistic Then (CORRECT):**
 ```gherkin
 Exemple: Create a draft blog post
   When a user creates a draft blog post with title "My Draft"
@@ -181,14 +186,14 @@ Exemple: Create a draft blog post
 ### When steps
 Only include parameters that are **meaningful for the behavior being documented**.
 
-**❌ Over-specified When (PROHIBITED):**
+**Over-specified When (PROHIBITED):**
 ```gherkin
 Exemple: Search returns matching posts by keyword
   When the user searches for posts with keyword "cucumber" and sort "date" and limit 10 and offset 0
   Then posts containing "cucumber" are returned
 ```
 
-**✅ Minimalistic When (CORRECT):**
+**Minimalistic When (CORRECT):**
 ```gherkin
 Exemple: Search returns matching posts by keyword
   When the user searches for posts with keyword "cucumber"
