@@ -3,15 +3,16 @@
 ## Outline
 Your goal is to create reliable and maintainable concurrent api tests to verify that the system behavior respect the Gherkin feature description provided as input.
 
-Your first step is always to deeply analyse the Gherkin feature files and the OpenAPI specification to understand the feature you need to generate the test for. 
+Your first step is always to deeply analyse the Gherkin feature files, the OpenAPI specification, and the `data-partitions.yaml` file to understand the feature you need to generate the test for. 
 
 The API MUST be tested at the API level. Tests arrange, act, assert solely via HTTP/API calls (black‑box). The tests CANNOT rely on preexisting mutable state; each constructs and owns a fresh data partition (unique ids) that ensure there will be no side-effects between tests. Concurrency is mandatory: every test MUST be runnable alongside others without side effects. Shared mutable state and inter-test ordering dependencies are PROHIBITED. Teardown during test execution is unnecessary (isolation guarantees); resource cleanup MAY occur out of band strictly for capacity reasons to control storage/quotas. Reliability ALWAYS supersedes marginal execution time improvements.
 
 You MUST ALWAYS stop and ask questions to the user if:
 - The Gherkin feature files cannot be found or are invalid.
 - The OpenAPI specification cannot be found or are invalid (located at /test/shared/apiUnderTest/open-api.yaml by convention).
+- The `data-partitions.yaml` file cannot be found or is invalid (located at /test/shared/apiUnderTest/data-partitions.yaml by convention).
 - The test cases identified during the planing will not yield a strong confidence that the system under test is working properly and respect the expected system behaviour. 
-- Data partitioning is not explicitly specified in the OpenAPI specification for the endpoint under test
+- Data partitioning strategy is not documented in `data-partitions.yaml` for the endpoint under test
 - Avoiding race conditions is impossible
 
 ### Understanding Data Partitioning (CRITICAL - Read Carefully)
@@ -20,14 +21,16 @@ Data partitioning is the mechanism that enables concurrent test execution withou
 
 **How to identify partition strategy:**
 
-1. **Read the OpenAPI specification carefully** for each endpoint you're testing
-2. Look for partition descriptions in:
-   - Path parameter descriptions
-   - Query parameter descriptions  
-   - Request body descriptions
-3. Common patterns you'll see:
-   - "MUST be partitioned by server-generated id" → Use server-generated IDs
-   - "MUST be partitioned by {fieldName}" → Use that specific client-controlled field
+1. **Read the `data-partitions.yaml` file** located at `test/shared/apiUnderTest/data-partitions.yaml`. This file is the single source of truth for how each endpoint achieves test isolation.
+2. For each endpoint, the file specifies:
+   - `type`: Either `server-generated` (automatic isolation) or `client-controlled` (you must ensure uniqueness)
+   - `field`: The name of the field used for partitioning
+   - `location`: Where the field exists (`response.body`, `query`, `path`, or `request.body`)
+
+**How to use it:**
+
+1. **If `type: server-generated`** — No special action needed. The server returns a unique ID; use it for subsequent operations.
+2. **If `type: client-controlled`** — Use `getTestRunId()` as a prefix for the partition field value with a meaningful suffix unique to your test.
 
 **Critical rule:** Only set partition fields explicitly when they are client-controlled. For server-generated IDs, the server handles isolation automatically through unique IDs.
 
@@ -68,13 +71,13 @@ Before returning your response, think hard and try to find item of the check lis
 > ⚠️ **STOP before writing each test and answer these questions:**
 > 1. What specific behavior is this test verifying?
 > 2. Which attributes directly prove this behavior works?
-> 3. What is the data partition strategy for this endpoint (from OpenAPI spec)?
+> 3. What is the data partition strategy for this endpoint (from `data-partitions.yaml`)?
 > 4. Have I left ALL other attributes to template defaults?
 
 - [ ] MUST only override attributes from the template that are **meaningful for the behavior being tested**. All other attributes MUST be left to template defaults. This is CRITICAL for test readability and maintainability.
 - [ ] Data partition attributes (client-controlled value) are always meaningful for isolation and MUST be set (unless it's a server-generated values).
-- [ ] MUST use the data partition explicitly specified in the OpenAPI specification for the endpoint under test (ask user the information is not available).
-- [ ] MUST NOT add comment in tests to identify the data partition. It's already specified in the OpenAPI specification.
+- [ ] MUST use the data partition strategy documented in `data-partitions.yaml` for the endpoint under test (ask user if the information is not available).
+- [ ] MUST NOT add comment in tests to identify the data partition. It's already specified in `data-partitions.yaml`.
 - [ ] MUST follow the data partitioning convention: `${getTestRunId()}-${short-readable-name-unique-in-all-test-cases}` where `getTestRunId()` is from `@villedemontreal/concurrent-api-tests`. Example: `${getTestRunId()}-blog-post-draft` or `${getTestRunId()}-user-john-doe`.
 - [ ] MUST avoid reliance on preexisting state.
 - [ ] MUST not use setup, they are prohibited in order favor isolation of concurrent tests.
@@ -122,7 +125,8 @@ test/
 ├── allTests.apiTestSuite.ts    # Root suite - imports all *.apiTest.ts
 ├── shared/
 │   └── apiUnderTest/
-│       └── generated/              # Auto-generated API client # ⚠️ Do not edit manually 
+│       ├── data-partitions.yaml    # Data partition strategy for each endpoint
+│       └── generated/              # Auto-generated API client # ⚠️ Do not edit manually
 └── {feature}/ # ⚠️ Folder and file name MUST be in English
     ├── {feature}.apiTest.ts    # Tests (describe/it)
     ├── {feature}.fixture.ts    # Arrange/Act helpers
@@ -133,7 +137,7 @@ test/
 
 ### 2. Test File (*.apiTest.ts)
 
-> **Note:** The examples below include explanatory comments for learning purposes. Generated test code should NOT include data partition comments since that information is already in the OpenAPI specification.
+> **Note:** The examples below include explanatory comments for learning purposes. Generated test code should NOT include data partition comments since that information is already in `data-partitions.yaml`.
 
 ```typescript
 // ✅ File: blogPost.apiTest.ts (English name)

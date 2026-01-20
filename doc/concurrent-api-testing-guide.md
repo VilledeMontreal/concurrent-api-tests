@@ -223,7 +223,6 @@ dataPartitions:
     type: client-controlled
     field: keyword
     location: query
-    dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
 
   GET /blog-posts/{id}:
     type: server-generated
@@ -238,7 +237,6 @@ dataPartitions:
 | `type` | Either `server-generated` (automatic isolation) or `client-controlled` (you must ensure uniqueness) |
 | `field` | The name of the field used for partitioning |
 | `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` |
-| `dataPartitionKeyTemplate` | **Required for client-controlled only.** Shows the exact pattern to use in tests |
 
 #### How to Use It
 
@@ -246,11 +244,11 @@ dataPartitions:
 
 1. **If `type: server-generated`** — No special action needed. The server returns a unique ID; use it for subsequent operations.
 
-2. **If `type: client-controlled`** — Copy the `dataPartitionKeyTemplate` and customize the suffix for your test:
+2. **If `type: client-controlled`** — Use `getTestRunId()` as a prefix for the partition field value:
 
 ```typescript
-// data-partitions.yaml says: dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
-// In your test, replace "meaningful-keyword" with something meaningful:
+// data-partitions.yaml says: field: keyword, type: client-controlled
+// Use getTestRunId() prefix with a meaningful suffix:
 const keyword = `${getTestRunId()}-electronics-search`;
 ```
 
