@@ -51,7 +51,7 @@ You achieve isolation by ensuring each test's data has unique identifiers. When 
 
 ### How Partitioning Works
 
-There are two scenarios, depending on who controls the identifying field:
+There are three scenarios, depending on the nature of the endpoint:
 
 **1. Server-generated IDs** — Isolation happens automatically
 
@@ -184,6 +184,28 @@ graph TB
   class A1,B1,DB1,DB2 default
 ```
 
+**3. Stateless endpoints** — No partition needed
+
+Some endpoints don't read or write any persistent state. They simply transform input into output without side effects. Examples include:
+- Calculator endpoints (`POST /calculate`)
+- Data transformation or formatting endpoints
+- Validation endpoints
+- Health check endpoints
+
+For these endpoints, tests can run concurrently without any isolation concerns because there's no shared state to interfere with.
+
+```typescript
+// Test A calculates a sum
+const resultA = await calculate({ operation: "add", a: 5, b: 3 });
+// Returns: { result: 8 }
+
+// Test B calculates a product (running concurrently)
+const resultB = await calculate({ operation: "multiply", a: 4, b: 7 });
+// Returns: { result: 28 }
+
+// No interference possible — each request is independent
+```
+
 ### Designing Systems for Testability
 
 Concurrent API testing requires the system to be built with testability in mind. When designing each API endpoint, you must consider how data will be partitioned. Most of the time, there's a natural data partition (like a server-generated ID), but sometimes you need to add one explicitly to the system.
@@ -212,6 +234,7 @@ Create this file alongside your OpenAPI spec (e.g., in `test/shared/apiUnderTest
 # Partition Types:
 #   - server-generated: The server creates a unique identifier (automatic isolation)
 #   - client-controlled: The test must provide a unique value (use getTestRunId() prefix)
+#   - stateless: The endpoint doesn't read or write any persistent state (no partition needed)
 
 dataPartitions:
   POST /blog-posts:
@@ -228,15 +251,18 @@ dataPartitions:
     type: server-generated
     field: id
     location: path
+
+  POST /calculate:
+    type: stateless
 ```
 
 **Fields explained:**
 
 | Field | Description |
 |-------|-------------|
-| `type` | Either `server-generated` (automatic isolation) or `client-controlled` (you must ensure uniqueness) |
-| `field` | The name of the field used for partitioning |
-| `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` |
+| `type` | Either `server-generated` (automatic isolation), `client-controlled` (you must ensure uniqueness), or `stateless` (no partition needed) |
+| `field` | The name of the field used for partitioning (not applicable for stateless) |
+| `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` (not applicable for stateless) |
 
 #### How to Use It
 
@@ -251,6 +277,8 @@ dataPartitions:
 // Use getTestRunId() prefix with a meaningful suffix:
 const keyword = `${getTestRunId()}-electronics-search`;
 ```
+
+3. **If `type: stateless`** — No data partitioning needed. The endpoint doesn't read or write any persistent state (e.g., calculator, transformation, validation endpoints). Tests can run concurrently without any isolation concerns.
 
 #### Why This Matters
 

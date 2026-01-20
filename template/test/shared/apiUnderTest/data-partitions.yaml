@@ -6,20 +6,13 @@
 # Partition Types:
 #   - server-generated: The server creates a unique identifier (automatic isolation)
 #   - client-controlled: The test must provide a unique value (use getTestRunId() prefix)
+#   - stateless: The endpoint doesn't read or write any persistent state (no partition needed)
 
 dataPartitions:
-  POST /blog-posts:
-    type: server-generated
-    field: id
-    location: response.body
-
-  GET /blog-posts:
-    type: client-controlled
-    field: keyword
-    location: query
-    dataPartitionKeyTemplate: ${getTestRunId()}-meaningful-keyword
-
-  GET /blog-posts/{id}:
-    type: server-generated
-    field: id
-    location: path
+  GET /hello:
+    type: stateless
+    notes: |
+      Read-only endpoint that returns the authenticated user's name.
+      Isolation is achieved through the authentication context (JWT token).
+      No mutable state is created or modified - response is determined by the bearer token.
+      Tests can run concurrently without side effects as each uses its own authentication.

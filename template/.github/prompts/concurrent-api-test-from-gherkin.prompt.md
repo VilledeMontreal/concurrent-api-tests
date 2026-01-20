@@ -23,16 +23,17 @@ Data partitioning is the mechanism that enables concurrent test execution withou
 
 1. **Read the `data-partitions.yaml` file** located at `test/shared/apiUnderTest/data-partitions.yaml`. This file is the single source of truth for how each endpoint achieves test isolation.
 2. For each endpoint, the file specifies:
-   - `type`: Either `server-generated` (automatic isolation) or `client-controlled` (you must ensure uniqueness)
-   - `field`: The name of the field used for partitioning
-   - `location`: Where the field exists (`response.body`, `query`, `path`, or `request.body`)
+   - `type`: Either `server-generated` (automatic isolation), `client-controlled` (you must ensure uniqueness), or `stateless` (no partition needed)
+   - `field`: The name of the field used for partitioning (not applicable for stateless)
+   - `location`: Where the field exists (`response.body`, `query`, `path`, or `request.body`) (not applicable for stateless)
 
 **How to use it:**
 
 1. **If `type: server-generated`** — No special action needed. The server returns a unique ID; use it for subsequent operations.
 2. **If `type: client-controlled`** — Use `getTestRunId()` as a prefix for the partition field value with a meaningful suffix unique to your test.
+3. **If `type: stateless`** — No data partitioning needed. The endpoint doesn't read or write any persistent state (e.g., calculator, transformation, validation endpoints). Tests can run concurrently without isolation concerns.
 
-**Critical rule:** Only set partition fields explicitly when they are client-controlled. For server-generated IDs, the server handles isolation automatically through unique IDs.
+**Critical rule:** Only set partition fields explicitly when they are client-controlled. For server-generated IDs, the server handles isolation automatically through unique IDs. For stateless endpoints, no partition handling is required.
 
 You MUST respect each point of the implementation compliance checklist.
 
