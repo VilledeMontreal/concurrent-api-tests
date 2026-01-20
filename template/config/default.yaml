@@ -1,3 +1,10 @@
 shared:
   apiUnderTest:
     apiBaseUrl: "http://localhost:3000"
+    roles:
+      reader:
+        username: reader@example.com
+        password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
+      writer:
+        username: writer@example.com
+        password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
