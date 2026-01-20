@@ -125,8 +125,10 @@ test/
 ├── allTests.apiTestSuite.ts    # Root suite - imports all *.apiTest.ts
 ├── shared/
 │   └── apiUnderTest/
-│       ├── data-partitions.yaml    # Data partition strategy for each endpoint
-│       └── generated/              # Auto-generated API client # ⚠️ Do not edit manually
+│       ├── open-api.yaml           # OpenAPI specification (project-specific)
+│       ├── data-partitions.yaml    # Data partition strategy for each endpoint (project-specific)
+│       ├── generated/              # Auto-generated API client ⚠️ NEVER edit manually
+│       └── tooling/                # Code generation scripts (adapt if needed)
 └── {feature}/ # ⚠️ Folder and file name MUST be in English
     ├── {feature}.apiTest.ts    # Tests (describe/it)
     ├── {feature}.fixture.ts    # Arrange/Act helpers

@@ -632,7 +632,7 @@ graph TB
         suite["allTests.apiTestSuite.ts"]
         
         shared["shared/<br/><i>Cross-cutting concerns<br/>Code not owned by a feature</i>"]
-        apiUnderTest["apiUnderTest/generated/<br/><i>Auto-generated API client<br/>(never edit)</i>"]
+        apiUnderTest["apiUnderTest/<br/><i>Low level functions to interact with the API</i>"]
         
         feature1["feature1/"]
         test1["feature1.apiTest.ts<br/><i>Test cases (describe/it blocks)</i>"]
@@ -671,6 +671,16 @@ graph TB
     class test1,fixture1,template1,test2,fixture2,template2 fileStyle
 ```
 
+### The apiUnderTest Directory
+
+The `test/shared/apiUnderTest/` directory contains everything related to the API you're testing:
+
+| Path | Description |
+|------|-------------|
+| `open-api.yaml` | **Project-specific.** Your API's OpenAPI specification. Update this to match your API. |
+| `data-partitions.yaml` | **Project-specific.** Documents the data partition strategy for each endpoint. Update this for your API. |
+| `generated/` | **Auto-generated.** API client generated from `open-api.yaml` by running `npm run generate-api-client`. Never edit manually. |
+| `tooling/` | **Provided by default.** Scripts for generating the API client. Works in most cases, but can be adapted to your project's needs. |
 
 ## Handling Flaky Tests
 
