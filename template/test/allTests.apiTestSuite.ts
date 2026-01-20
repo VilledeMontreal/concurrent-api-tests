@@ -1,5 +1,3 @@
-import { blogPostApiTests } from "./blogPosts/blogPost.apiTest";
-import { userApiTests } from "./users/user.apiTest";
+import { helloApiTests } from "./gettingStarted/hello.apiTest";
 
-userApiTests();
-blogPostApiTests();
+helloApiTests();
