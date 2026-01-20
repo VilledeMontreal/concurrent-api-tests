@@ -6,13 +6,13 @@ export function helloApiTests() {
     it("Reader can access the hello endpoint", async () => {
       const actual = await getHello("reader");
 
-      assert.strictEqual(actual.data.userName, "reader@example.com");
+      assert.strictEqual(actual.userName, "reader@example.com");
     });
 
     it("Writer can access the hello endpoint", async () => {
       const actual = await getHello("writer");
 
-      assert.strictEqual(actual.data.userName, "writer@example.com");
+      assert.strictEqual(actual.userName, "writer@example.com");
     });
   });
 }
