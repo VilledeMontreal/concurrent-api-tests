@@ -48,22 +48,16 @@ export function waterServiceConnectionApiTests() {
       it.each(authorizedRoles)(
         "Déplacement d'un branchement d'eau par un $role",
         async ({ role }) => {
-          const dataPartitionId = createDataPartitionId();
           const createRequest = copyWaterServiceConnectionTemplate((x) => {
-            x.dataPartitionId = dataPartitionId;
+            x.dataPartitionId = createDataPartitionId();
             x.location = copyPointTemplate((p) => {
               p.coordinates = [-73.58, 45.52];
             });
           });
           const created = await postWaterServiceConnection(createRequest, role);
 
-          const updateRequest = copyWaterServiceConnectionTemplate((x) => {
-            x.dataPartitionId = dataPartitionId;
-            x.location = copyPointTemplate((p) => {
-              p.coordinates = [-73.59, 45.53];
-            });
-          });
-          const actual = await putWaterServiceConnection(created.id, updateRequest, role);
+          created.location.coordinates = [-73.59, 45.53];
+          const actual = await putWaterServiceConnection(created.id, created, role);
 
           assert.strictEqual(actual.location.coordinates[0], -73.59);
           assert.strictEqual(actual.location.coordinates[1], 45.53);
