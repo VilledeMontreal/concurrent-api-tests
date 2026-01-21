@@ -13,19 +13,8 @@ import {
 import { getJwtTokenFor } from "../shared/apiUnderTest/tooling/auth.sharedFixture";
 import { UserRole } from "../shared/apiUnderTest/tooling/apiUnderTestConfig";
 
-// Map to store UUID per test name to ensure consistent partitioning within a test
-const testPartitionIds = new Map<string, string>();
-
-/**
- * Generates a unique data partition ID (UUID format) for test isolation.
- * The same testName will return the same UUID within a test run.
- */
-export function getDataPartitionId(testName: string): string {
-  const key = `${getTestRunId()}-${testName}`;
-  if (!testPartitionIds.has(key)) {
-    testPartitionIds.set(key, uuidv4());
-  }
-  return testPartitionIds.get(key)!;
+export function createDataPartitionId(): string {
+  return uuidv4();
 }
 
 export async function postWaterServiceConnection(

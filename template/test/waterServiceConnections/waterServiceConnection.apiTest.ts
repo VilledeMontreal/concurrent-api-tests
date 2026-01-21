@@ -3,7 +3,7 @@ import { assert } from "chai";
 import {
   postWaterServiceConnection,
   putWaterServiceConnection,
-  getDataPartitionId,
+  createDataPartitionId,
 } from "./waterServiceConnection.fixture";
 import {
   copyWaterServiceConnectionTemplate,
@@ -15,7 +15,7 @@ export function waterServiceConnectionApiTests() {
     describe("Règle: Tout utilisateur autorisé peut créer un branchement d'eau", () => {
       it("Création d'un branchement d'eau", async () => {
         const request = copyWaterServiceConnectionTemplate((x) => {
-          x.dataPartitionId = getDataPartitionId("create-wsc");
+          x.dataPartitionId = createDataPartitionId();
           x.location = copyPointTemplate((p) => {
             p.coordinates = [-73.5700, 45.5100];
           });
@@ -31,7 +31,7 @@ export function waterServiceConnectionApiTests() {
 
     describe("Règle: Tout utilisateur autorisé peut déplacer un branchement d'eau", () => {
       it("Déplacement d'un branchement d'eau", async () => {
-        const dataPartitionId = getDataPartitionId("move-wsc");
+        const dataPartitionId = createDataPartitionId();
         const createRequest = copyWaterServiceConnectionTemplate((x) => {
           x.dataPartitionId = dataPartitionId;
           x.location = copyPointTemplate((p) => {
@@ -55,7 +55,7 @@ export function waterServiceConnectionApiTests() {
 
     describe("Règle: Seul le contremaître peut supprimer un branchement d'eau", () => {
       it("Le contremaître supprime un branchement d'eau", async () => {
-        const dataPartitionId = getDataPartitionId("delete-by-foreman");
+        const dataPartitionId = createDataPartitionId();
         const createRequest = copyWaterServiceConnectionTemplate((x) => {
           x.dataPartitionId = dataPartitionId;
         });
@@ -71,7 +71,7 @@ export function waterServiceConnectionApiTests() {
       });
 
       it("Un utilisateur non contremaître ne peut pas supprimer un branchement d'eau", async () => {
-        const dataPartitionId = getDataPartitionId("delete-by-screener");
+        const dataPartitionId = createDataPartitionId();
         const createRequest = copyWaterServiceConnectionTemplate((x) => {
           x.dataPartitionId = dataPartitionId;
         });
