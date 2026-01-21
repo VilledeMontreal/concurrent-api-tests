@@ -79,6 +79,7 @@ Before returning your response, think hard and try to find item of the check lis
 > 2. Which attributes directly prove this behavior works?
 > 3. What is the data partition strategy for this endpoint (from `data-partitions.yaml`)?
 > 4. Have I left ALL other attributes to template defaults?
+> 5. **For UPDATE operations:** Am I reusing the response from creation/read instead of creating a new request from template? (See "Update Pattern: Reuse Response" below)
 
 - [ ] MUST only override attributes from the template that are **meaningful for the behavior being tested**. All other attributes MUST be left to template defaults. This is CRITICAL for test readability and maintainability.
 - [ ] Data partition attributes (client-controlled value) are always meaningful for isolation and MUST be set (unless it's a server-generated values).
@@ -95,7 +96,7 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST use shared immutable fixtures only when attributes are meaningless for the behavior under test. Shared immutable fixtures are immutable during test execution. Do not overuse.
 - [ ] MUST use `defineGetSharedFixture(createSharedFixture)` when a shared immutable fixture is required. See getImmutableGuessUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below. Immutable data is the only kind of data that may be shared between concurrent tests while preserving isolation.
 - [ ] MUST use `defineGetSharedFixtureByKey(createSharedFixtureByKey)` when a shared immutable fixture by key is required. One shared fixture per key. See getImmutableUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below.
-- [ ] When updating a resource, if the request attributes are a subset of the response attributes, MUST reuse the response from creation/read and modify only the necessary fields. DO NOT create a new request from the template as this resets all attributes to defaults and may cause unintended side effects. See "Update Pattern: Reuse Response" in "Implementation Patterns Reference" below.
+- [ ] **CRITICAL for UPDATE operations:** When updating a resource, if the request attributes are a subset of the response attributes, MUST reuse the response from creation/read and modify only the necessary fields. DO NOT create a new request from the template as this resets all attributes to defaults and may cause unintended side effects. See "Update Pattern: Reuse Response" in "Implementation Patterns Reference" below.
 
 ### Act
 - [ ] MUST assign the response of the act request to a variable named actual.
