@@ -2,24 +2,37 @@
 
 # Concurrent API Tests
 
-Validating your system through the API layer provides the highest assurance that your application works for your users. By utilizing isolated, concurrent execution, you ensure that your test suite remains a reliable source of truth rather than a maintenance burden.
+**Your test suite shouldn't be the thing that slows you down.**
 
-## Why This Approach?
+Every team hits the same wall: unit tests pass, mocks are green, but production breaks anyway. The integration tests that actually catch real bugs? They're slow, flaky, and everyone's afraid to touch them. So you write fewer of them. And ship more bugs.
 
-| Benefit | Description |
-|---------|-------------|
-| **Higher Confidence** | All moving parts tested together through the real API |
-| **Tests Stay Stable** | API contracts remain constant while internals evolve |
-| **Easier to Write** | No complex mocking or shared setup/teardown |
-| **Team Scale** | Tests stay reliable as your team and codebase grow |
+**There's a better way.**
 
-## Moving Beyond Speed
-While concurrent execution provides rapid feedback, its true value lies in practicality. It allows you to run comprehensive, end-to-end scenarios that would be too cumbersome to execute sequentially. This makes deep, thorough testing a sustainable part of your daily workflow rather than a luxury.
+Concurrent API testing lets you run hundreds of end-to-end tests in seconds—not by sacrificing thoroughness, but by designing tests that can safely run in parallel. No shared state. No flaky interdependencies. No "works on my machine."
+
+This approach has been battle-tested across multiple projects with many contributors, handling **1500+ API tests** that run reliably on every commit.
+
+## Why Teams Adopt This
+
+| | Before | After |
+|---|--------|-------|
+| **Confidence** | Unit tests pass, production fails | Real bugs caught before merge |
+| **Stability** | Flaky tests ignored or deleted | Tests you actually trust |
+| **Speed** | "Full suite? Maybe tonight." | Full suite on every PR |
+| **Maintenance** | Shared fixtures, cascading failures | Isolated tests, local reasoning |
+
+## The Real Win Isn't Speed
+
+Yes, running tests concurrently is fast. But speed is a side effect.
+
+The real value is that **isolation makes tests trustworthy**. When each test owns its data, you stop debugging phantom failures. You stop skipping tests "just for this PR." You stop treating your test suite as a liability.
+
+Concurrent testing makes comprehensive coverage *sustainable*—not a luxury you defer until "later."
 
 ## Documentation
 
 ### [Concurrent API Testing Guide](doc/concurrent-api-testing-guide.md)
-**Production-ready** — The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. Battle-tested across multiple projects with many contributors, handling 1500+ API tests. [Read the Concurrent API Testing Guide](doc/concurrent-api-testing-guide.md) and [start your project from the template](todo).
+**Production-ready** — The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. [Read the guide](doc/concurrent-api-testing-guide.md) to get started.
 
 ```mermaid
 graph TB

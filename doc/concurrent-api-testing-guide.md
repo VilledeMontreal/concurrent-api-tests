@@ -1,23 +1,5 @@
 # Concurrent API Testing Guide
 
-## What Are Concurrent API Tests?
-
-Concurrent API tests verify your system's behavior by making HTTP calls, just like a real client would. The key difference from traditional tests: **all tests run simultaneously**.
-
-### Why Concurrent Testing?
-
-| Benefit | Description |
-|---------|-------------|
-| **Higher Confidence** | All moving parts tested together |
-| **Tests Remain Stable** | API stays constant while internals evolve (refactoring, upgrades) |
-| **Easier to Read** | Each test declares its own data clearly |
-| **Easier to Write** | No complex mocking or large setup/teardown |
-| **Team Scale** | Work well in large team |
-
-**Speed matters because it enables adoption**: If these tests ran sequentially, they'd take too long, get run less often, and lose their value. Concurrent execution makes thorough API testing practical. However, reliable and maintainable tests are more important than raw execution speed.
-
-The challenge? When tests run at the same time, they can interfere with each other. If Test A creates a user and Test B deletes all users, chaos ensues. This guide teaches you how to prevent that.
-
 ## Core Principles
 
 ### Black-Box Testing
