@@ -95,6 +95,7 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST use shared immutable fixtures only when attributes are meaningless for the behavior under test. Shared immutable fixtures are immutable during test execution. Do not overuse.
 - [ ] MUST use `defineGetSharedFixture(createSharedFixture)` when a shared immutable fixture is required. See getImmutableGuessUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below. Immutable data is the only kind of data that may be shared between concurrent tests while preserving isolation.
 - [ ] MUST use `defineGetSharedFixtureByKey(createSharedFixtureByKey)` when a shared immutable fixture by key is required. One shared fixture per key. See getImmutableUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below.
+- [ ] When updating a resource, if the request attributes are a subset of the response attributes, MUST reuse the response from creation/read and modify only the necessary fields. DO NOT create a new request from the template as this resets all attributes to defaults and may cause unintended side effects. See "Update Pattern: Reuse Response" in "Implementation Patterns Reference" below.
 
 ### Act
 - [ ] MUST assign the response of the act request to a variable named actual.
@@ -297,6 +298,54 @@ const request = copyBlogPostTemplate((x) => {
   x.title = null;                    // Meaningful (required title is the behavior under test)
 });
 ```
+
+#### Update Pattern: Reuse Response
+
+When testing update operations, reuse the response from creation instead of creating a new request from template. This preserves all existing attributes and only modifies what's being tested.
+
+**Anti-pattern: Creating new request from template (PROHIBITED)**
+
+```typescript
+// Test: "Move blog post to different category"
+// WRONG - using template resets ALL attributes to defaults, potentially causing side effects
+it("Move blog post to different category", async () => {
+  const createRequest = copyBlogPostTemplate((x) => {
+    x.title = "My Post";
+    x.category = "tech";
+    x.tags = ["javascript", "testing"];
+  });
+  const created = await postBlogPost(createRequest);
+
+  // PROHIBITED: This resets tags to [], content to default, etc.
+  const updateRequest = copyBlogPostTemplate((x) => {
+    x.category = "science";
+  });
+  const actual = await putBlogPost(created.id, updateRequest);
+
+  assert.strictEqual(actual.category, "science");
+});
+```
+
+**Correct: Reuse response and modify only what's needed**
+
+```typescript
+// Test: "Move blog post to different category"
+// CORRECT - reuse response, modify only the field being tested
+it("Move blog post to different category", async () => {
+  const createRequest = copyBlogPostTemplate((x) => {
+    x.title = "My Post";
+    x.category = "tech";
+  });
+  const created = await postBlogPost(createRequest);
+
+  created.category = "science";
+  const actual = await putBlogPost(created.id, created);
+
+  assert.strictEqual(actual.category, "science");
+});
+```
+
+> **Rule:** If the request type attributes are a subset of the response type attributes, always reuse the response object for updates. The API will ignore extra response-only fields (like `id`, `createdAt`).
 
 ---
 
