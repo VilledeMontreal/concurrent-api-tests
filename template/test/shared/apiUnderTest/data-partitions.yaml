@@ -9,14 +9,6 @@
 #   - stateless: The endpoint doesn't read or write any persistent state (no partition needed)
 
 dataPartitions:
-  GET /hello:
-    type: stateless
-    notes: |
-      Read-only endpoint that returns the authenticated user's name.
-      Isolation is achieved through the authentication context (JWT token).
-      No mutable state is created or modified - response is determined by the bearer token.
-      Tests can run concurrently without side effects as each uses its own authentication.
-
   POST /v1-beta/water-service-connections/:
     type: client-controlled
     field: dataPartitionId
