@@ -1,4 +1,15 @@
 {
   "name": "Node.js",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node"
+  "image": "mcr.microsoft.com/devcontainers/javascript-node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "donjayamanne.githistory",
+        "Arjun.swagger-viewer",
+        "shd101wyy.markdown-preview-enhanced",
+        "alexkrechik.cucumberautocomplete",
+        "bierner.markdown-mermaid"
+      ]
+    }
+  }
 }

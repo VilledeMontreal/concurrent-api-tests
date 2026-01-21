@@ -6,7 +6,9 @@
       "extensions": [
         "donjayamanne.githistory",
         "Arjun.swagger-viewer",
-        "shd101wyy.markdown-preview-enhanced"
+        "shd101wyy.markdown-preview-enhanced",
+        "alexkrechik.cucumberautocomplete",
+        "bierner.markdown-mermaid"
       ]
     }
   }
