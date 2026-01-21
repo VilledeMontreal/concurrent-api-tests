@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import { getTestRunId } from "@villedemontreal/concurrent-api-tests";
 import {
   postWaterServiceConnection as postWaterServiceConnectionApiClient,
   postWaterServiceConnectionResponseSuccess,
