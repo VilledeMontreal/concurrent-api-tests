@@ -8,3 +8,12 @@ shared:
       writer:
         username: writer@example.com
         password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
+      depisteur:
+        username: depisteur@example.com
+        password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
+      inspecteur:
+        username: inspecteur@example.com
+        password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
+      contremaitre:
+        username: contremaitre@example.com
+        password: "!!!NO SECRET IN GIT - USE local.yaml!!!"
