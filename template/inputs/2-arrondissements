@@ -1,0 +1,5 @@
+Le système GBEau permet de lister tous les arrondissements. Par exemple, si je cherche tous les arrondissements, le premier de la liste sera "Ahuntsic - Cartierville" puisque que la liste est triée en ordre alphabétique.
+
+Je peux aussi chercher un arrondissement par son nom. Par exemple, si je cherche pour "Cart", alors un seul arrondissement ("Ahuntsic - Cartierville") sera retourné puisque un seul arrondissement correspond à ce critère de recherche.
+
+La ville de Montréal comporte 19 arrondissements, mais le contremaître a accès à un arrondissement supplémentaire: "Inconnue". Cet arrondissement est nécessaire pour traiter les cas exceptionnels où un branchement d'eau est remplacé dans une ville liée. Les autre rôles n'ont pas accès à l'option "Inconnue" 
