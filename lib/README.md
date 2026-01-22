@@ -1,14 +1,10 @@
-# concurrent-api-tests
-
-Concurrent-api-tests provides the core functions required to implement [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550) with [Vitest](https://vitest.dev/).
-
 ## To Install
 
 In your project, run this npm command:
 
 `npm install @villedemontreal/concurrent-api-tests`
 
-## Functions
+## Concurrent API Test Functions
 
 ### defineCopyTemplate(template)
 
@@ -24,7 +20,28 @@ A function that provide a default payload template and allow to specify only the
 
 **Example**
 
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L4-L17).
+```typescript
+import { defineCopyTemplate } from "@villedemontreal/concurrent-api-tests";
+
+interface BlogPost {
+  title: string;
+  content: string;
+  keywords: string[];
+  category: string;
+}
+
+export const copyBlogPostTemplate = defineCopyTemplate<BlogPost>({
+  title: "titleDefault",
+  content: "contentDefault",
+  keywords: [],
+  category: "categoryDefault",
+});
+
+// In test — only override what matters
+const request = copyBlogPostTemplate((x) => {
+  x.title = "My Custom Title";
+});
+```
 
 ---
 
@@ -43,7 +60,23 @@ A function that provide a default payload template and allow to specify only the
 
 **Example**
 
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.template.ts#L19-L23).
+```typescript
+import { defineCopyTemplateVariation } from "@villedemontreal/concurrent-api-tests";
+
+// Create a variation for blog posts with a specific category
+export const copyTechBlogPostTemplate = defineCopyTemplateVariation(
+  copyBlogPostTemplate,
+  (x) => {
+    x.category = "tech";
+  }
+);
+
+// In test — the variation already has category set
+const request = copyTechBlogPostTemplate((x) => {
+  x.title = "Tech Article";
+});
+// request.category is already "tech"
+```
 
 ---
 
@@ -62,7 +95,24 @@ void
 
 **Example**
 
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/blogPosts/blogPost.apiTest.ts#L29-L36).
+```typescript
+import { shouldThrow } from "@villedemontreal/concurrent-api-tests";
+import { assert } from "chai";
+
+it("Title is required", async () => {
+  const request = copyBlogPostTemplate((x) => {
+    x.title = null;
+  });
+
+  await shouldThrow(
+    () => postBlogPost(request),
+    (err) => {
+      assert.strictEqual(err.status, 400);
+      assert.include(err.message, "title");
+    }
+  );
+});
+```
 
 ---
 
@@ -70,7 +120,7 @@ See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent
 
 Some test cases must rely on the timing between API requests. These test cases are likely to be [flaky](https://hackernoon.com/flaky-tests-a-war-that-never-ends-9aa32fdef359) if the timing is not managed with care.
 
-If the precision of the timing has to be less than a second, then concurrent-api-tests is not the right tool for this test case. For more guidance, see [Concurrent API Tests](https://medium.com/@stphaneleblanc/d84f7a29f0dc?source=friends_link&sk=843339381eaf77195f8522449c907550).
+If the precision of the timing has to be less than a second, then concurrent-api-tests is not the right tool for this test case.
 
 **Arguments**
 
@@ -113,7 +163,25 @@ A function that perform lazy initialization of the shared fixture.
 
 **Example**
 
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L14).
+```typescript
+import { defineGetSharedFixture } from "@villedemontreal/concurrent-api-tests";
+
+interface JwtToken {
+  token: string;
+  expiresAt: Date;
+}
+
+// Shared fixture — caches the JWT token for all tests
+export const getAdminJwtToken = defineGetSharedFixture<JwtToken>(
+  () => fetchJwtToken("admin") // Called only once, then cached
+);
+
+// In test
+it("Admin can create blog post", async () => {
+  const token = await getAdminJwtToken();
+  // token is reused across all tests that call getAdminJwtToken()
+});
+```
 
 ---
 
@@ -131,7 +199,32 @@ A function that perform lazy initialization of the shared fixture for a specific
 
 **Example**
 
-See [concurrent-api-tests example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/src/users/user.fixture.ts#L16).
+```typescript
+import { defineGetSharedFixtureByKey } from "@villedemontreal/concurrent-api-tests";
+
+type UserRole = "admin" | "editor" | "reader";
+
+interface JwtToken {
+  token: string;
+  expiresAt: Date;
+}
+
+// Shared by key — caches one JWT token per role
+export const getJwtTokenFor = defineGetSharedFixtureByKey<UserRole, JwtToken>(
+  (role) => fetchJwtToken(role) // Called once per unique role
+);
+
+// In tests
+it("Editor can create blog post", async () => {
+  const token = await getJwtTokenFor("editor");
+  // First call authenticates; subsequent calls reuse cached token
+});
+
+it("Admin can delete blog post", async () => {
+  const token = await getJwtTokenFor("admin");
+  // Different key, so authenticates separately from "editor"
+});
+```
 
 ## Testing concurrent-api-tests itself
 
