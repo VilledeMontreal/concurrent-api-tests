@@ -365,15 +365,18 @@ export const copyBlogPostTemplate = defineCopyTemplate<BlogPostRequest>({
 import {
   postBlogPost as postBlogPostApi,
   getBlogPosts as getBlogPostsApi,
+  BlogPostRequest,
+  BlogPostResponse,
 } from "../shared/apiUnderTest/generated/api";
-import { BlogPostRequest } from "../shared/apiUnderTest/generated/api";
 
-export async function postBlogPost(request: BlogPostRequest) {
-  return await postBlogPostApi(request);
+export async function postBlogPost(request: BlogPostRequest): Promise<BlogPostResponse> {
+  const response = await postBlogPostApi(request);
+  return response.body;
 }
 
-export async function getBlogPosts(keyword: string) {
-  return await getBlogPostsApi({ keyword });
+export async function getBlogPosts(keyword: string): Promise<BlogPostResponse[]> {
+  const response = await getBlogPostsApi({ keyword });
+  return response.body;
 }
 ```
 
@@ -399,7 +402,7 @@ export function blogPostApiTests() {
 
         const actual = await postBlogPost(request);
 
-        assert.strictEqual(actual.body.title, "Getting Started with Gherkin");
+        assert.strictEqual(actual.title, "Getting Started with Gherkin");
       });
 
       it("Title is required", async () => {
@@ -411,7 +414,7 @@ export function blogPostApiTests() {
           () => postBlogPost(request),
           (err) => {
             assert.strictEqual(err.status, 400);
-            assert.include(err.info.message, "Title is required");
+            assert.include(err.data.message, "Title is required");
           }
         );
       });
@@ -425,7 +428,7 @@ export function blogPostApiTests() {
           () => postBlogPost(request),
           (err) => {
             assert.strictEqual(err.status, 400);
-            assert.include(err.info.message, "Title is required");
+            assert.include(err.data.message, "Title is required");
           }
         );
       });
@@ -441,12 +444,12 @@ export function blogPostApiTests() {
 
         const actual = await postBlogPost(request);
 
-        assert.deepEqual(actual.body.keywords, ["testing", "automation"]);
+        assert.deepEqual(actual.keywords, ["testing", "automation"]);
       });
 
       it("Search blog posts by keyword", async () => {
         const keyword = `${getTestRunId()}-testing`;
-        
+
         await Promise.all([
           postBlogPost(copyBlogPostTemplate((x) => {
             x.title = "First Post";
@@ -460,9 +463,9 @@ export function blogPostApiTests() {
 
         const actual = await getBlogPosts(keyword);
 
-        assert.strictEqual(actual.body.length, 2);
-        assert.include(actual.body.map((x) => x.title), "First Post");
-        assert.include(actual.body.map((x) => x.title), "Second Post");
+        assert.strictEqual(actual.length, 2);
+        assert.include(actual.map((x) => x.title), "First Post");
+        assert.include(actual.map((x) => x.title), "Second Post");
       });
     });
   });
