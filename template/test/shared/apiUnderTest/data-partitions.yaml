@@ -13,31 +13,21 @@ dataPartitions:
     type: client-controlled
     field: dataPartitionId
     location: request.body
-    notes: |
-      Creates a water service connection. The dataPartitionId field (UUID format) is used
-      for test isolation. Each test should generate a unique dataPartitionId using getTestRunId().
-      The server returns a server-generated id for the created resource.
 
   PUT /v1-beta/water-service-connections/{id}:
     type: server-generated
     field: id
     location: path
-    notes: |
-      Updates a water service connection by id. The id is server-generated from the POST.
-      Isolation is inherited from the dataPartitionId used when creating the resource.
 
   GET /v1-beta/water-service-connections/{id}:
     type: server-generated
     field: id
     location: path
-    notes: |
-      Retrieves a water service connection by id. The id is server-generated from the POST.
-      Isolation is inherited from the dataPartitionId used when creating the resource.
 
   GET /v1-beta/deleted-water-service-connections:
     type: client-controlled
     field: dataPartitionId
     location: query
-    notes: |
-      Returns list of deleted water service connections filtered by dataPartitionId.
-      Use the same dataPartitionId used when creating the resources to isolate test data.
+
+  GET /v1-beta/boroughs:
+    type: stateless
