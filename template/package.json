@@ -7,7 +7,6 @@
     "test-current": "env NODE_ENV=localhost npm run compileAndTest",
     "test-latest-stable": "env NODE_ENV=dev npm run compileAndTest",
     "compileAndTest": "vitest all --run",
-    "flaky-test-report-example": "vitest flaky --run",
     "lint-fix": "prettier --write . && eslint . --fix",
     "generate-api-client": "orval"
   },
