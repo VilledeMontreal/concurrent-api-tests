@@ -1,4 +1,4 @@
-npmmodule.exports = {
+module.exports = {
   apiUnderTest: {
     input: "./test/shared/apiUnderTest/open-api.yaml",
     output: {
