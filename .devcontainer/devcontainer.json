@@ -8,7 +8,8 @@
         "Arjun.swagger-viewer",
         "shd101wyy.markdown-preview-enhanced",
         "alexkrechik.cucumberautocomplete",
-        "bierner.markdown-mermaid"
+        "bierner.markdown-mermaid",
+        "esbenp.prettier-vscode" 
       ]
     }
   }
