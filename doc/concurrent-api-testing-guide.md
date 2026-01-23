@@ -727,7 +727,7 @@ While fixing flaky tests should be a priority, **you must balance this against o
 
 **The data you collect makes fixing easier later**. When you see that "Search returns matching posts" fails every Tuesday at 3 AM, or always fails when running after a specific test, you've narrowed down the root cause significantly.
 
-See the [test report example](https://github.com/VilledeMontreal/concurrent-api-tests/blob/master/example/README.md#test-report-example-when-a-test-fails-or-does-not-succeed-on-the-first-time-flaky) for detailed output formatting.
+See the [FlakyTestReporter documentation](../lib/README.md#flakyttestreporter) for configuration and output examples.
 
 ## When NOT to Use Concurrent API Tests
 
@@ -779,4 +779,4 @@ If your tests have strict timing requirements or race conditions you must precis
 | [`shouldThrow()`](../lib/README.md#shouldthrowact-customassert) | Assert that an action throws an HTTP error |
 | [`getTestRunId()`](../lib/README.md#gettestrunid) | Get unique prefix for data partition fields |
 | [`aFewSeconds()`](../lib/README.md#afewsecondsdelayinseconds) | Delay (avoid; ask before using) |
-| `FlakyTestReporter` | Automatically detect and report flaky tests with complete error log |
+| [`FlakyTestReporter`](../lib/README.md#FlakyTestReporter) | Automatically detect and report flaky tests with complete error log |

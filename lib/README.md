@@ -261,6 +261,108 @@ it("Admin can delete blog post", async () => {
 });
 ```
 
+### FlakyTestReporter
+
+A custom Vitest reporter that highlights flaky tests. A flaky test is one that fails on initial attempts but eventually passes after retries. The reporter extends Vitest's VerboseReporter to display detailed information about each flaky test, including the number of failures and the full error stack traces.
+
+**Configuration**
+
+Add the reporter to your `vitest.config.ts` and enable retries:
+
+```typescript
+import { defineConfig } from "vitest/config";
+import { FlakyTestReporter } from "@villedemontreal/concurrent-api-tests";
+
+export default defineConfig({
+  test: {
+    reporters: [new FlakyTestReporter()],
+    retry: 2, // Number of retry attempts for failed tests
+  },
+});
+```
+
+**Example Output**
+
+When flaky tests are detected, the reporter displays a dedicated section showing each flaky test with its failure history:
+
+```
+ RUN  v4.0.3 /workspaces/concurrent-api-tests/flakyTestReporterDemo
+
+ ✓ test/flakyTests.apiTestSuite.ts > Flaky > Test pass 1ms
+ × test/flakyTests.apiTestSuite.ts > Flaky > Test with error 3ms (retry x2)
+   → Pow!
+   → Pow!
+   → Pow!
+ ✓ test/flakyTests.apiTestSuite.ts > Flaky > Flaky once 0ms (retry x1)
+ ✓ test/flakyTests.apiTestSuite.ts > Flaky > Flaky twice 1ms (retry x2)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ Flaky Tests 2
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ FLAKY  Flaky > Flaky once: failed 1 time and then passed.
+Error: Pow!Flaky:1
+ ❯ test/flakyTests.apiTestSuite.ts:16:21
+     14|     iFlakyOnce++;
+     15|     if (iFlakyOnce <= 1) {
+     16|       const error = new Error("Pow!Flaky:" + iFlakyOnce) as any;
+       |                     ^
+     17|       error.additionnalAttribute = "The key to understand this bug.";
+     18|       throw error;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { additionnalAttribute: 'The key to understand this bug.' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ FLAKY  Flaky > Flaky twice: failed 2 times and then passed.
+Error: Pow!Flaky:1
+ ❯ test/flakyTests.apiTestSuite.ts:25:21
+     23|     iFlakyTwice++;
+     24|     if (iFlakyTwice <= 2) {
+     25|       const error = new Error("Pow!Flaky:" + iFlakyTwice) as any;
+       |                     ^
+     26|       error.additionnalAttribute =
+     27|         "The key to understand this bug. Flaky:" + iFlakyTwice;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { additionnalAttribute: 'The key to understand this bug. Flaky:1' }
+Error: Pow!Flaky:2
+ ❯ test/flakyTests.apiTestSuite.ts:25:21
+     23|     iFlakyTwice++;
+     24|     if (iFlakyTwice <= 2) {
+     25|       const error = new Error("Pow!Flaky:" + iFlakyTwice) as any;
+       |                     ^
+     26|       error.additionnalAttribute =
+     27|         "The key to understand this bug. Flaky:" + iFlakyTwice;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { additionnalAttribute: 'The key to understand this bug. Flaky:2' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/flakyTests.apiTestSuite.ts > Flaky > Test with error
+ FAIL  test/flakyTests.apiTestSuite.ts > Flaky > Test with error
+ FAIL  test/flakyTests.apiTestSuite.ts > Flaky > Test with error
+Error: Pow!
+ ❯ test/flakyTests.apiTestSuite.ts:8:19
+      6|   });
+      7|   it("Test with error", () => {
+      8|     const error = new Error("Pow!") as any;
+       |                   ^
+      9|     error.additionnalAttribute = "The key to understand this bug.";
+     10|     throw error;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { additionnalAttribute: 'The key to understand this bug.' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:40:24
+   Duration  204ms (transform 29ms, setup 0ms, collect 39ms, tests 6ms, environment 0ms, prepare 9ms)
+```
+
+---
+
 ## Testing concurrent-api-tests itself
 
 Run all unit tests, run this npm command:
