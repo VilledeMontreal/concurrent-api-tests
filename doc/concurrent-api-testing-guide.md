@@ -772,11 +772,11 @@ If your tests have strict timing requirements or race conditions you must precis
 
 | Utility | Purpose |
 |---------|---------|
-| `defineCopyTemplate()` | Create request templates with valid defaults |
-| `defineCopyTemplateVariation()` | Extend a template (use only if reused 5+ times) |
-| `defineGetSharedFixture()` | Share immutable data across tests |
-| `defineGetSharedFixtureByKey()` | Share immutable data by key (e.g., user by role) |
-| `shouldThrow()` | Assert that an action throws an HTTP error |
-| `getTestRunId()` | Get unique prefix for data partition fields |
-| `aFewSeconds()` | Delay (avoid; ask before using) |
+| [`defineCopyTemplate()`](../lib/README.md#definecopytemplattemplate) | Create request templates with valid defaults |
+| [`defineCopyTemplateVariation()`](../lib/README.md#definecopytemplatevariation-originalcopytemplate-variation) | Extend a template (use only if reused 5+ times) |
+| [`defineGetSharedFixture()`](../lib/README.md#definegetsharedfixturecreatesharedfixture) | Share immutable data across tests |
+| [`defineGetSharedFixtureByKey()`](../lib/README.md#definegetsharedfixturebykey-createsharedfixturebykey) | Share immutable data by key (e.g., user by role) |
+| [`shouldThrow()`](../lib/README.md#shouldthrowact-customassert) | Assert that an action throws an HTTP error |
+| [`getTestRunId()`](../lib/README.md#gettestrunid) | Get unique prefix for data partition fields |
+| [`aFewSeconds()`](../lib/README.md#afewsecondsdelayinseconds) | Delay (avoid; ask before using) |
 | `FlakyTestReporter` | Automatically detect and report flaky tests with complete error log |
