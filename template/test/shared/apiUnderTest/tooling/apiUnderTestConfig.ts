@@ -10,6 +10,8 @@ export interface ApiUnderTestConfig {
   roles: Record<string, RoleCredentials>;
 }
 
-export const apiUnderTestConfig: ApiUnderTestConfig = config.get("shared.apiUnderTest");
+export const apiUnderTestConfig: ApiUnderTestConfig = config.get(
+  "shared.apiUnderTest",
+);
 
 export type UserRole = keyof typeof apiUnderTestConfig.roles;

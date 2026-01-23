@@ -6,7 +6,7 @@ import { getJwtTokenFor } from "../shared/apiUnderTest/tooling/auth.sharedFixtur
 import { UserRole } from "../shared/apiUnderTest/tooling/apiUnderTestConfig";
 
 export async function getHello(
-  role: UserRole = "reader" // Each fixture sets its own default role
+  role: UserRole = "reader", // Each fixture sets its own default role
 ): Promise<getHelloResponseSuccess["data"]> {
   const jwtToken = await getJwtTokenFor(role);
   const response = await getHelloApiClient({

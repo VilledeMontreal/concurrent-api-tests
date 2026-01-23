@@ -55,9 +55,9 @@ export const getJwtTokenFor = defineGetSharedFixtureByKey<UserRole, JwtToken>(
     const credentials = apiUnderTestConfig.roles[role];
     if (!credentials) {
       throw new Error(
-        `Unknown role: ${role}. Available roles: ${Object.keys(apiUnderTestConfig.roles).join(", ")}`
+        `Unknown role: ${role}. Available roles: ${Object.keys(apiUnderTestConfig.roles).join(", ")}`,
       );
     }
     return fetchJwtToken(credentials);
-  }
+  },
 );

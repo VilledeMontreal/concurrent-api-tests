@@ -2,7 +2,7 @@ export class ApiResponseError<TData = unknown> extends Error {
   constructor(
     public data: TData,
     public status: number,
-    public headers: Headers
+    public headers: Headers,
   ) {
     const message =
       typeof data === "object" && data && "message" in data
@@ -16,7 +16,7 @@ export class ApiResponseError<TData = unknown> extends Error {
 }
 
 export function isApiResponseError<TError>(
-  error: unknown
+  error: unknown,
 ): error is ApiResponseError<TError> {
   return error instanceof ApiResponseError;
 }
@@ -36,7 +36,7 @@ const parseBody = (body: string | null): unknown => {
 
 export const customFetch = async <T>(
   url: string,
-  options?: RequestInit
+  options?: RequestInit,
 ): Promise<T> => {
   const res = await fetch(url, options);
 

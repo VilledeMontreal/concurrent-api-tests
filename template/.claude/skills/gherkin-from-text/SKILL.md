@@ -12,19 +12,21 @@ All Gherkin feature files MUST be created in a `gherkin/` folder in the workspac
 ## Workflow Context
 
 **This is incremental and collaborative:**
+
 - Challenge unclear or incomplete requirements — ask questions
 - Expect to be challenged — the user may correct or refine your output
 - The user may edit your output directly or ask for revisions
 - AI assists but does not replace human judgment on business rules
 
 ALWAYS ask questions to the user if:
+
 - the textual description provided as input is not clear
 - the feature/rule breakdown is ambiguous
 - the feature/rule is poor and need to be challenged
 - the textual description contains UX-specific details (colors, fonts, visual positioning, animations, specific UI elements, layout details). You MUST ask the user if these details must be ommited in the Gherkin or if they must be included as distinct file/feature. DO NOT create UX files without explicit user confirmation.
 
-
 The Gherkin you write MUST ALWAYS :
+
 - be declarative, as opposed to imperative (see "Writing better Gherkin" section).
 - be readable by any stakeholder (client, management, product owner, analyst, tester, dev, etc.).
 - include a feature description directly under the **Feature** keyword that explains **why this feature matters**, the business value, and context. Aim for complete specifications, not just test input (see "Feature" section).
@@ -41,9 +43,9 @@ The Gherkin you write MUST ALWAYS :
 
 - only describe functionnal requirements. Do NOT describe non functionnal requirements (ex: response times, availability, etc.).
 - be written in the same language as the one provided as input.
-Ex: if the input is in french, the generated Gherkin is in french
+  Ex: if the input is in french, the generated Gherkin is in french
 - respect the official translation of Gherkin keywords.
-If the language is not english, find the translation in the "Language" section. Stop without completing your job if the language is not found. Do NOT guess or infer translations.
+  If the language is not english, find the translation in the "Language" section. Stop without completing your job if the language is not found. Do NOT guess or infer translations.
 - ommit the language directive (e.g., "# language: fr") at the beginning of the file.
 - use precise, explicit, and unambiguous language.
 - avoid idioms, metaphors, or context-dependent references.
@@ -55,9 +57,11 @@ If the language is not english, find the translation in the "Language" section. 
 - favor end-to-end behaviour description over UX-specific behaviour (avoid unless it's a major concern).
 
 ## Writing better Gherkin
+
 There are several ways to make your Gherkin better.
 
 ### Describe behaviour
+
 Your scenarios should describe the intended behaviour of the system, not the implementation. In other words, it should describe what, not how.
 
 For example, for an authentication Scenario, you should write:
@@ -76,13 +80,14 @@ instead of:
   Then I should see the "welcome" page
 ```
 
-The first example, **When "Bob" logs in**, is a *functional requirement*. The second, much longer, example is a *procedural reference*. Functional requirements are features, but procedures belong in the implementation details.
+The first example, **When "Bob" logs in**, is a _functional requirement_. The second, much longer, example is a _procedural reference_. Functional requirements are features, but procedures belong in the implementation details.
 
 That way, when the implementation of a feature changes, you'll only need to change the process steps behind the scenes. The behaviour does not have to change just because the implementation does. In fact, a good question to ask yourself when writing a feature clause is: "Will this wording need to change if the implementation does?".
 
 If the answer is "Yes", then you should rework it avoiding implementation specific details. As a side benefit, in consequence your scenarios will be a lot shorter and much easier to follow and understand.
 
 ### Consider a more declarative style
+
 One way to make scenarios easier to maintain and less brittle is to use a declarative style. Declarative style describes the behaviour of the application, rather than the implementation details. Declarative scenarios read better as "living documentation". A declarative style helps you focus on the value that the customer is getting, rather than the keystrokes they will use.
 
 Imperative tests communicate details, and in some contexts this style of test is appropriate. On the other hand, because they are so closely tied to the mechanics of the current UI, they often require more work to maintain. Any time the implementation changes, the tests need to be updated too.
@@ -133,15 +138,18 @@ With a declarative style, each step communicates an idea, but the exact values a
 > **CRITICAL**: Over-specification makes Gherkin harder to read, understand, and maintain. Irrelevant details obscure the business intent and create noise that distracts stakeholders from the actual behavior being documented.
 
 Each example MUST only include details that are **meaningful for the specific behavior being documented**. Ask yourself for each detail:
+
 1. "Is this detail essential to understand this specific behavior?"
 2. "Would removing this detail change what the example is describing?"
 
 If the answer is "No" to either question, **omit the detail**.
 
 ### Given steps
+
 Only specify preconditions that are **meaningful for the behavior being documented**. Do NOT include irrelevant context.
 
 **Over-specified Given (PROHIBITED):**
+
 ```gherkin
 Exemple: Title is required when creating a blog post
   Given a user "John Doe" with email "john@example.com" and role "author"
@@ -153,6 +161,7 @@ Exemple: Title is required when creating a blog post
 ```
 
 **Minimalistic Given (CORRECT):**
+
 ```gherkin
 Exemple: Title is required when creating a blog post
   When a user creates a blog post without a title
@@ -160,9 +169,11 @@ Exemple: Title is required when creating a blog post
 ```
 
 ### Then steps
+
 Only verify outcomes that are **meaningful for the behavior being documented**. Do NOT include irrelevant attributes.
 
 **Over-specified Then (PROHIBITED):**
+
 ```gherkin
 Exemple: Create a draft blog post
   When a user creates a draft blog post with title "My Draft"
@@ -177,6 +188,7 @@ Exemple: Create a draft blog post
 ```
 
 **Minimalistic Then (CORRECT):**
+
 ```gherkin
 Exemple: Create a draft blog post
   When a user creates a draft blog post with title "My Draft"
@@ -184,9 +196,11 @@ Exemple: Create a draft blog post
 ```
 
 ### When steps
+
 Only include parameters that are **meaningful for the behavior being documented**.
 
 **Over-specified When (PROHIBITED):**
+
 ```gherkin
 Exemple: Search returns matching posts by keyword
   When the user searches for posts with keyword "cucumber" and sort "date" and limit 10 and offset 0
@@ -194,6 +208,7 @@ Exemple: Search returns matching posts by keyword
 ```
 
 **Minimalistic When (CORRECT):**
+
 ```gherkin
 Exemple: Search returns matching posts by keyword
   When the user searches for posts with keyword "cucumber"
@@ -203,11 +218,13 @@ Exemple: Search returns matching posts by keyword
 ### Key questions to avoid over-specification
 
 Before writing each example, ask:
+
 1. **What specific behavior is this example documenting?**
 2. **Which details are essential to understand this behavior?**
 3. **Have I omitted all irrelevant details?**
 
 ## Feature
+
 The purpose of the Feature keyword is to provide a high-level description of a software feature, and to group related scenarios.
 
 The first primary keyword in a Gherkin document must always be Feature, followed by a : and a short text that describes the feature.
@@ -219,6 +236,7 @@ These description lines are ignored by Cucumber at runtime, but are available fo
 ### Aim for Complete Specifications
 
 A well-written Feature is more than test input — it's living documentation. Include:
+
 - **Business context** — Why does this feature exist?
 - **Value proposition** — What problem does it solve? Who benefits?
 - **Business rules** — General rules, not just examples
@@ -247,6 +265,7 @@ You can place tags above Feature to group related features, independent of your 
 You can only have a single Feature in a .feature file.
 
 ## Descriptions
+
 Free-form descriptions (as described above for Feature) can also be placed underneath Example/Scenario, Background, Scenario Outline and Rule.
 
 You can write anything you like, as long as no line starts with a keyword.
@@ -254,6 +273,7 @@ You can write anything you like, as long as no line starts with a keyword.
 Descriptions can be in the form of Markdown - formatters including the official HTML formatter support this.
 
 ## Rule
+
 The (optional) Rule keyword has been part of Gherkin since v6.
 
 The purpose of the Rule keyword is to represent one business rule that should be implemented. It provides additional information for a feature. A Rule is used to group together several scenarios that belong to this business rule. A Rule should contain one or more scenarios that illustrate the particular rule.
@@ -284,6 +304,7 @@ Feature: Highlander
 ```
 
 ## Scenario Outline
+
 The **Scenario Outline** keyword can be used to run the same **Scenario** multiple times, with different combinations of values.
 
 The keyword **Scenario Template** is a synonym of the keyword **Scenario Outline**.
@@ -319,6 +340,7 @@ Scenario Outline: eating
 ```
 
 ## Background
+
 Occasionally you'll find yourself repeating the same **Given** steps in all of the scenarios in a **Feature**.
 
 Since it is repeated in every scenario, this is an indication that those steps are not essential to describe the scenarios; they are incidental details. You can literally move such **Given** steps to the background, by grouping them under a **Background** section.
@@ -382,6 +404,7 @@ Feature: Overdue tasks
 You can only have one set of **Background** steps per **Feature** or **Rule**. If you need different **Background** steps for different scenarios, consider breaking up your set of scenarios into more **Rules** or more **Feature**s.
 
 ### Tips for using Background
+
 - Don't use **Background** to set up complicated states, unless that state is actually something the client needs to know.
   - For example, if the user and site names don't matter to the client, use a higher-level step such as **Given I am logged in as a site owner**.
 - Keep your **Background** section short.
@@ -389,37 +412,39 @@ You can only have one set of **Background** steps per **Feature** or **Rule**. I
 - Make your **Background** section **vivid**.
   - Use colourful names, and try to tell a story. The human brain keeps track of stories much better than it keeps track of names like "User A", "User B", "Site 1", and so on.
 - Keep your scenarios **short**, and don't have too many.
-  - If the **Background** section has scrolled off the screen, the reader no longer has a full overview of what's happening. Think about using higher-level steps, or splitting the *.feature file.
+  - If the **Background** section has scrolled off the screen, the reader no longer has a full overview of what's happening. Think about using higher-level steps, or splitting the \*.feature file.
 
 ## Language
 
 ### French/français (`fr`)
 
-| Keyword | Equivalent(s) |
-|---------|---------------|
-| Feature | Fonctionnalité |
-| Background | Contexte |
-| Rule | Règle |
-| Scenario | Exemple |
-| Scenario Outline | Plan du scénario |
-| Examples | Exemples |
-| Given | Étant donné que, Étant donné qu', Étant donné, Étant donnée, Étant donnés, Étant données |
-| When | Quand |
-| Then | Alors |
-| And | Et |
-| But | Mais |
+| Keyword          | Equivalent(s)                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| Feature          | Fonctionnalité                                                                           |
+| Background       | Contexte                                                                                 |
+| Rule             | Règle                                                                                    |
+| Scenario         | Exemple                                                                                  |
+| Scenario Outline | Plan du scénario                                                                         |
+| Examples         | Exemples                                                                                 |
+| Given            | Étant donné que, Étant donné qu', Étant donné, Étant donnée, Étant donnés, Étant données |
+| When             | Quand                                                                                    |
+| Then             | Alors                                                                                    |
+| And              | Et                                                                                       |
+| But              | Mais                                                                                     |
 
 ## UX Separation
 
 **CRITICAL**: Always create TWO separate files when UX-specific details are present in the input description:
 
 ### File naming convention:
+
 - Main feature: `feature-name.feature`
 - UX feature: `feature-name-ux.feature`
 
 ### Example of separation:
 
 **Bad (mixed functional and UX in one file):**
+
 ```gherkin
 Exemple: User submits incorrect password
   When the user enters an incorrect password
@@ -430,6 +455,7 @@ Exemple: User submits incorrect password
 **Good (separated into two files):**
 
 `login.feature`:
+
 ```gherkin
 Exemple: User submits incorrect password
   When the user enters an incorrect password
@@ -437,6 +463,7 @@ Exemple: User submits incorrect password
 ```
 
 `login-ux.feature`:
+
 ```gherkin
 @UX
 Exemple: Error notification visual display
@@ -446,6 +473,7 @@ Exemple: Error notification visual display
 ```
 
 ## Sources
+
 - https://cucumber.io/docs/bdd/better-gherkin
 - https://cucumber.io/docs/gherkin/reference
 - https://cucumber.io/docs/gherkin/languages

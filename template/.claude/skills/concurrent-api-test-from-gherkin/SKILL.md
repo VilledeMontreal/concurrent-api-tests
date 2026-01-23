@@ -6,6 +6,7 @@ description: Create reliable concurrent API tests from Gherkin feature files usi
 # Concurrent API tests from Gherkin features
 
 ## Outline
+
 Your goal is to create reliable and maintainable concurrent api tests to verify that the system behavior respect the Gherkin feature description provided as input.
 
 Your first step is always to deeply analyse the Gherkin feature files, the OpenAPI specification, and the `data-partitions.yaml` file to understand the feature you need to generate the test for.
@@ -13,6 +14,7 @@ Your first step is always to deeply analyse the Gherkin feature files, the OpenA
 The API MUST be tested at the API level. Tests arrange, act, assert solely via HTTP/API calls (black‑box). The tests CANNOT rely on preexisting mutable state; each constructs and owns a fresh data partition (unique ids) that ensure there will be no side-effects between tests. Concurrency is mandatory: every test MUST be runnable alongside others without side effects. Shared mutable state and inter-test ordering dependencies are PROHIBITED. Teardown during test execution is unnecessary (isolation guarantees); resource cleanup MAY occur out of band strictly for capacity reasons to control storage/quotas. Reliability ALWAYS supersedes marginal execution time improvements.
 
 You MUST ALWAYS stop and ask questions to the user if:
+
 - The Gherkin feature files cannot be found or are invalid.
 - The OpenAPI specification cannot be found or are invalid (located at /test/shared/apiUnderTest/open-api.yaml by convention).
 - The `data-partitions.yaml` file cannot be found or is invalid (located at /test/shared/apiUnderTest/data-partitions.yaml by convention).
@@ -43,11 +45,13 @@ Data partitioning is the mechanism that enables concurrent test execution withou
 You MUST respect each point of the implementation compliance checklist.
 
 ### CRITICAL REQUIREMENTS
+
 Before returning your response, think hard and try to find item of the check list that are not respected. Fix them returning your response.
 
 ## API Test Implementation Compliance Checklist
 
 ### General
+
 - [ ] MUST use `vitest` for test runner.
 - [ ] MUST use `@villedemontreal/concurrent-api-tests` for test utility.
 - [ ] MUST generate a `*.apiTest.ts` file for each Gherkin feature file (`*.feature`).
@@ -61,20 +65,22 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST import all new `*.apiTest.ts` files into `allTests.apiTestSuite.ts`.
 - [ ] MUST ensure there are no side effects between tests by using data parition to isolate each test cases from the other test cases.
 - [ ] MUST preserve visible Arrange–Act–Assert separation by skipping a line between each section.
-- [ ] MUST organise frequently used arrange, act and assert functions in *.fixture.ts files. See section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below.
+- [ ] MUST organise frequently used arrange, act and assert functions in _.fixture.ts files. See section "4. Fixture (_.fixture.ts)" in "Implementation Patterns Reference" below.
 - [ ] Fixture functions MUST return the response body directly (not the full HTTP response) to improve test readability. For rare cases needing headers or status codes, create a separate fixture.
-- [ ] MUST avoid code duplication between *.fixture.ts files. One *.fixture.ts files can be reuse accross multiple `*.apiTest.ts` files.
+- [ ] MUST avoid code duplication between _.fixture.ts files. One _.fixture.ts files can be reuse accross multiple `*.apiTest.ts` files.
 - [ ] MUST avoid using wait time to synchronise test case executions (ex: setTimeout). If unavoidable, you MUST ask for explicit user confirmation before using `aFewSeconds(delayInSeconds)` from `@villedemontreal/concurrent-api-tests` to address the race condition.
 - [ ] MUST not teardown, they are complex and useless since concurrent api tests CANNOT rely on preexisting mutable state.
 
 ### API client generation (Minimalistic Principle)
+
 - [ ] MUST run `npm run generate-api-client` to generate/regenerate the API client from the OpenAPI specification before writing tests. Check if generated files exist in `test/shared/apiUnderTest/generated/`; if missing or outdated, regenerate them.
 - [ ] The code code under `test/shared/apiUnderTest/generated/` MUST NOT be edited manually.
-- [ ] MUST use the generated API client functions directly from test/shared/apiUnderTest/generated/*. DO NOT create wrapper functions that duplicate fetch logic. The fixture files MUST call the generated functions directly (e.g., `postItem(request)`, `searchItems(params)`).
+- [ ] MUST use the generated API client functions directly from test/shared/apiUnderTest/generated/\*. DO NOT create wrapper functions that duplicate fetch logic. The fixture files MUST call the generated functions directly (e.g., `postItem(request)`, `searchItems(params)`).
 
 ### Arrange (Minimalistic Principle)
 
 > **STOP before writing each test and answer these questions:**
+>
 > 1. What specific behavior is this test verifying?
 > 2. Which attributes directly prove this behavior works?
 > 3. What is the data partition strategy for this endpoint (from `data-partitions.yaml`)?
@@ -89,21 +95,23 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST avoid reliance on preexisting state.
 - [ ] MUST not use setup, they are prohibited in order favor isolation of concurrent tests.
 - [ ] MUST arrange only through public HTTP endpoints. Never internal databases or components in order to preserve black‑box guarantees and enabling refactors.
-- [ ] MUST organise template with defaults values in *.template.ts files.
-- [ ] MUST use `defineCopyTemplate(template)` from `@villedemontreal/concurrent-api-tests` to define template. See copyBlogPostTemplate example in section "3. Template (*.template.ts)" in "Implementation Patterns Reference" below.
+- [ ] MUST organise template with defaults values in \*.template.ts files.
+- [ ] MUST use `defineCopyTemplate(template)` from `@villedemontreal/concurrent-api-tests` to define template. See copyBlogPostTemplate example in section "3. Template (\*.template.ts)" in "Implementation Patterns Reference" below.
 - [ ] MUST keep template defaults clearly artificial yet valid.
-- [ ] MUST use `defineCopyTemplateVariation(originalCopyTemplate, variation)` from `@villedemontreal/concurrent-api-tests` to avoid duplication when the same template is used in 5+ test cases. See copyBlogPostWithEmptyContentTemplate example in section "3. Template (*.template.ts)" in "Implementation Patterns Reference" below. Do not overuse, in doubt rely only on defineCopyTemplate + override in each test.
+- [ ] MUST use `defineCopyTemplateVariation(originalCopyTemplate, variation)` from `@villedemontreal/concurrent-api-tests` to avoid duplication when the same template is used in 5+ test cases. See copyBlogPostWithEmptyContentTemplate example in section "3. Template (\*.template.ts)" in "Implementation Patterns Reference" below. Do not overuse, in doubt rely only on defineCopyTemplate + override in each test.
 - [ ] MUST use shared immutable fixtures only when attributes are meaningless for the behavior under test. Shared immutable fixtures are immutable during test execution. Do not overuse.
-- [ ] MUST use `defineGetSharedFixture(createSharedFixture)` when a shared immutable fixture is required. See getImmutableGuessUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below. Immutable data is the only kind of data that may be shared between concurrent tests while preserving isolation.
-- [ ] MUST use `defineGetSharedFixtureByKey(createSharedFixtureByKey)` when a shared immutable fixture by key is required. One shared fixture per key. See getImmutableUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (*.fixture.ts)" in "Implementation Patterns Reference" below.
+- [ ] MUST use `defineGetSharedFixture(createSharedFixture)` when a shared immutable fixture is required. See getImmutableGuessUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (\*.fixture.ts)" in "Implementation Patterns Reference" below. Immutable data is the only kind of data that may be shared between concurrent tests while preserving isolation.
+- [ ] MUST use `defineGetSharedFixtureByKey(createSharedFixtureByKey)` when a shared immutable fixture by key is required. One shared fixture per key. See getImmutableUser example in subsection "Shared Immutable Fixture" of section "4. Fixture (\*.fixture.ts)" in "Implementation Patterns Reference" below.
 - [ ] **CRITICAL for UPDATE operations:** When updating a resource, if the request attributes are a subset of the response attributes, MUST reuse the response from creation/read and modify only the necessary fields. DO NOT create a new request from the template as this resets all attributes to defaults and may cause unintended side effects. See "Update Pattern: Reuse Response" in "Implementation Patterns Reference" below.
 
 ### Act
+
 - [ ] MUST assign the response of the act request to a variable named actual.
 
 ### Assert (Minimalistic Principle)
 
 > **STOP before writing assertions:**
+>
 > 1. Am I asserting ONLY what proves this specific behavior works?
 > 2. Am I using EXPLICIT values (not variables) for client-controlled data?
 > 3. Have I avoided asserting irrelevant fields?
@@ -115,7 +123,7 @@ Before returning your response, think hard and try to find item of the check lis
 - [ ] MUST NOT assert on template default values. Always override fields to meaningful values before asserting on them. Example: `assert.strictEqual(actual.title, "titleDefault")` is WRONG because it asserts on a default value. Instead, set an explicit value in arrange and assert on that explicit value.
 - [ ] MUST NOT assert on status code if the response is a success (2xx)
 - [ ] an exception MUST be thrown if the response is not a success (2xx)
-- [ ] MUST use `shouldThrow(act, customAssert)` from `@villedemontreal/concurrent-api-tests` when an HTTP error is expected. See test case "Title is required" in section "2. Test File (*.apiTest.ts)" in "Implementation Patterns Reference" below.
+- [ ] MUST use `shouldThrow(act, customAssert)` from `@villedemontreal/concurrent-api-tests` when an HTTP error is expected. See test case "Title is required" in section "2. Test File (\*.apiTest.ts)" in "Implementation Patterns Reference" below.
 - [ ] MUST assert at least both status code and error message when using `shouldThrow`. Additional assertions MAY be added if required to properly test the spec.
 - [ ] MUST not assert on what is already guarantee by the OpenAPI specification. Example: attribute type, isDefined, etc.
 - [ ] MUST use `assert` from `chai` for assertions.
@@ -145,22 +153,24 @@ test/
 
 ---
 
-### 2. Test File (*.apiTest.ts)
+### 2. Test File (\*.apiTest.ts)
 
 > **Note:** The examples below include explanatory comments for learning purposes. Generated test code should NOT include data partition comments since that information is already in `data-partitions.yaml`.
 
 ```typescript
 // File: blogPost.apiTest.ts (English name)
-import { shouldThrow, getTestRunId } from "@villedemontreal/concurrent-api-tests";
+import {
+  shouldThrow,
+  getTestRunId,
+} from "@villedemontreal/concurrent-api-tests";
 import { assert } from "chai";
-import { postBlogPost, getBlogPosts } from "./blogPost.fixture";  // English names
-import { copyBlogPostTemplate } from "./blogPost.template";        // English names
+import { postBlogPost, getBlogPosts } from "./blogPost.fixture"; // English names
+import { copyBlogPostTemplate } from "./blogPost.template"; // English names
 
 // Function name in English
 export function blogPostApiTests() {
   // describe() and it() strings match Gherkin language
   describe("BlogPosts", () => {
-
     // Basic test
     // data partitioned by blog post id (server-generated id)
     // no need to arrange data partition because blog post id is a server-generated ID
@@ -203,24 +213,37 @@ export function blogPostApiTests() {
       const keyword = `${getTestRunId()}-a-keyword`;
       // use promise.all when it makes the test faster without losing readability or reliability
       const [blogPost1, blogPost2] = await Promise.all([
-        postBlogPost(copyBlogPostTemplate((x) => {
-          x.title = "first";
-          x.keywords = [keyword];
-        })),
-        postBlogPost(copyBlogPostTemplate((x) => {
-          x.title = "second";
-          x.keywords = [keyword];
-        }))
+        postBlogPost(
+          copyBlogPostTemplate((x) => {
+            x.title = "first";
+            x.keywords = [keyword];
+          }),
+        ),
+        postBlogPost(
+          copyBlogPostTemplate((x) => {
+            x.title = "second";
+            x.keywords = [keyword];
+          }),
+        ),
       ]);
 
       const actual = await getBlogPosts(keyword);
 
       assert.strictEqual(actual.length, 2);
       // Server-generated IDs: response variables are acceptable
-      assert.sameMembers(actual.map((x) => x.id), [blogPost1.id, blogPost2.id]);
+      assert.sameMembers(
+        actual.map((x) => x.id),
+        [blogPost1.id, blogPost2.id],
+      );
       // Client-controlled titles: use explicit values
-      assert.include(actual.map(x => x.title), "first");
-      assert.include(actual.map(x => x.title), "second");
+      assert.include(
+        actual.map((x) => x.title),
+        "first",
+      );
+      assert.include(
+        actual.map((x) => x.title),
+        "second",
+      );
     });
   });
 }
@@ -228,28 +251,32 @@ export function blogPostApiTests() {
 
 ---
 
-### 3. Template (*.template.ts)
+### 3. Template (\*.template.ts)
 
 ```typescript
-import { defineCopyTemplate, defineCopyTemplateVariation } from "@villedemontreal/concurrent-api-tests";
+import {
+  defineCopyTemplate,
+  defineCopyTemplateVariation,
+} from "@villedemontreal/concurrent-api-tests";
 import { BlogPost } from "../shared/apiUnderTest/apiClient";
 
 // Base template with artificial but valid defaults
 export const copyBlogPostTemplate = defineCopyTemplate<BlogPost>({
-  title: "titleDefault",           // Use recognizable suffix
+  title: "titleDefault", // Use recognizable suffix
   content: "contentDefault",
   keywords: [],
   likeCount: 0,
   commentCount: 0,
-  id: null,                        // Server-generated
-  authorId: null,                  // Don't assume pre-existing state
+  id: null, // Server-generated
+  authorId: null, // Don't assume pre-existing state
 });
 
 // Variation - only when reused in MANY test cases
-export const copyBlogPostWithEmptyContentTemplate = defineCopyTemplateVariation<BlogPost>(
-  copyBlogPostTemplate,
-  (x) => (x.content = ""),
-);
+export const copyBlogPostWithEmptyContentTemplate =
+  defineCopyTemplateVariation<BlogPost>(
+    copyBlogPostTemplate,
+    (x) => (x.content = ""),
+  );
 ```
 
 #### Nested Templates
@@ -284,9 +311,9 @@ const request = copyBlogPostTemplate((x) => {
 // Test: "Title is required"
 // WRONG - title and difficulty are NOT meaningful for testing single-word behavior
 const request = copyBlogPostTemplate((x) => {
-  x.title = null;                    // Meaningful (required title is the behavior under test)
-  x.content = "Lorem ipsum...";      // PROHIBITED - not meaningful for this test
-  x.keywords = ["testing", "api"];   // PROHIBITED - not meaningful for this test
+  x.title = null; // Meaningful (required title is the behavior under test)
+  x.content = "Lorem ipsum..."; // PROHIBITED - not meaningful for this test
+  x.keywords = ["testing", "api"]; // PROHIBITED - not meaningful for this test
 });
 ```
 
@@ -296,7 +323,7 @@ const request = copyBlogPostTemplate((x) => {
 // Test: "Title is required"
 // CORRECT - only meaningful attributes are overridden
 const request = copyBlogPostTemplate((x) => {
-  x.title = null;                    // Meaningful (required title is the behavior under test)
+  x.title = null; // Meaningful (required title is the behavior under test)
 });
 ```
 
@@ -350,14 +377,18 @@ it("Move blog post to different category", async () => {
 
 ---
 
-### 4. Fixture (*.fixture.ts)
+### 4. Fixture (\*.fixture.ts)
 
 For arrange, act and assert functions with high potential for reuse.
 
 **Best practice:** Fixtures should return only the response body, not the full HTTP response. This improves readability by avoiding `.body.*` throughout tests. For rare cases needing headers or status codes, create a separate fixture returning the full response.
 
 ```typescript
-import { BlogPost, getBlogPosts as getBlogPostsApiClient, postBlogPost as postBlogPostApiClient } from "../shared/apiUnderTest/generated/api";
+import {
+  BlogPost,
+  getBlogPosts as getBlogPostsApiClient,
+  postBlogPost as postBlogPostApiClient,
+} from "../shared/apiUnderTest/generated/api";
 
 // CORRECT: Return body directly for cleaner test code
 export async function postBlogPost(request: BlogPost): Promise<BlogPost> {
@@ -383,7 +414,7 @@ import { ApiErrorResponse } from "../apiUnderTest/generated/api";
 export function assertValidationError(err: any): ApiErrorResponse {
   assert.strictEqual(err.status, 400);
   assert.exists(err.data);
-  return err.data as ApiErrorResponse;  // Type-safe after assertion
+  return err.data as ApiErrorResponse; // Type-safe after assertion
 }
 
 // Usage in tests
@@ -392,7 +423,7 @@ await shouldThrow(
   (err) => {
     const validationError = assertValidationError(err);
     assert.include(validationError.message, "title");
-  }
+  },
 );
 ```
 
@@ -401,26 +432,38 @@ await shouldThrow(
 For sharing immutable state between tests. Common use case: JWT tokens that are read-only during test execution.
 
 ```typescript
-import { defineGetSharedFixture, defineGetSharedFixtureByKey } from "@villedemontreal/concurrent-api-tests";
+import {
+  defineGetSharedFixture,
+  defineGetSharedFixtureByKey,
+} from "@villedemontreal/concurrent-api-tests";
 
 // Single shared fixture - created once per test run
-export const getImmutableGuestUser = defineGetSharedFixture<User>(() => createUser("guest"));
+export const getImmutableGuestUser = defineGetSharedFixture<User>(() =>
+  createUser("guest"),
+);
 
 // Shared fixture by key - one per unique key (e.g., JWT token per role)
 export const getJwtTokenFor = defineGetSharedFixtureByKey<UserRole, JwtToken>(
-  (role) => fetchJwtToken(role)  // Authenticates once per role, caches result
+  (role) => fetchJwtToken(role), // Authenticates once per role, caches result
 );
 
 // Usage in fixture - each feature sets its own default role
-export async function postBlogPost(request: BlogPost, role: UserRole = "admin") {
+export async function postBlogPost(
+  request: BlogPost,
+  role: UserRole = "admin",
+) {
   const jwtToken = await getJwtTokenFor(role);
-  const response = await postBlogPostApiClient(request, { headers: { Authorization: `Bearer ${jwtToken}` } });
+  const response = await postBlogPostApiClient(request, {
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
   return response.body;
 }
 
 // Usage in tests
 it("Editor can create blog post", async () => {
-  const request = copyBlogPostTemplate((x) => { x.title = "Editor Post"; });
+  const request = copyBlogPostTemplate((x) => {
+    x.title = "Editor Post";
+  });
 
   const actual = await postBlogPost(request, "editor");
 
@@ -451,16 +494,19 @@ it.each([
   { subtotal: 100, discountPercent: 0, expectedTotal: 100 },
   { subtotal: 100, discountPercent: 10, expectedTotal: 90 },
   { subtotal: 100, discountPercent: 50, expectedTotal: 50 },
-])("Order $subtotal with $discountPercent% discount → total=$expectedTotal", async ({ subtotal, discountPercent, expectedTotal }) => {
-  const request = copyOrderTemplate((x) => {
-    x.subtotal = subtotal;
-    x.discountPercent = discountPercent;
-  });
+])(
+  "Order $subtotal with $discountPercent% discount → total=$expectedTotal",
+  async ({ subtotal, discountPercent, expectedTotal }) => {
+    const request = copyOrderTemplate((x) => {
+      x.subtotal = subtotal;
+      x.discountPercent = discountPercent;
+    });
 
-  const actual = await postOrder(request);
+    const actual = await postOrder(request);
 
-  assert.strictEqual(actual.total, expectedTotal);
-});
+    assert.strictEqual(actual.total, expectedTotal);
+  },
+);
 ```
 
 ---
@@ -479,15 +525,15 @@ blogPostApiTests();
 
 ### Key Patterns Summary
 
-| Pattern | When to Use |
-|---------|-------------|
-| `defineCopyTemplate()` | Always for request templates |
-| `defineCopyTemplateVariation()` | Only when variation reused in 5+ tests. Do not overuse. |
-| `defineGetSharedFixture()` | Immutable data shared by 5+ tests. Do not overuse. |
+| Pattern                         | When to Use                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------ |
+| `defineCopyTemplate()`          | Always for request templates                                                   |
+| `defineCopyTemplateVariation()` | Only when variation reused in 5+ tests. Do not overuse.                        |
+| `defineGetSharedFixture()`      | Immutable data shared by 5+ tests. Do not overuse.                             |
 | `defineGetSharedFixtureByKey()` | Immutable data by key (e.g., user by role) shared by 5+ tests. Do not overuse. |
-| `shouldThrow()` | Any test expecting HTTP error |
-| `getTestRunId()` | Data partition ID prefix for client-controlled partition fields |
-| `aFewSeconds()` | AVOID - ask user first if unavoidable |
+| `shouldThrow()`                 | Any test expecting HTTP error                                                  |
+| `getTestRunId()`                | Data partition ID prefix for client-controlled partition fields                |
+| `aFewSeconds()`                 | AVOID - ask user first if unavoidable                                          |
 
 ---
 
@@ -505,10 +551,10 @@ const id = `${getTestRunId()}-{short-readable-unique-name}`;
 
 ### Gherkin → Test Mapping
 
-| Gherkin | Test Code |
-|---------|-----------|
-| `Feature:` | `describe("Feature name", () => { ... })` |
-| `Rule:` | `describe("Rule name", () => { ... })` |
-| `Example:` / `Scenario:` | `it("Example name", async () => { ... })` |
+| Gherkin                           | Test Code                                           |
+| --------------------------------- | --------------------------------------------------- |
+| `Feature:`                        | `describe("Feature name", () => { ... })`           |
+| `Rule:`                           | `describe("Rule name", () => { ... })`              |
+| `Example:` / `Scenario:`          | `it("Example name", async () => { ... })`           |
 | `Scenario Outline:` + `Examples:` | `it.each([...])("name", async (params) => { ... })` |
-| `Background:` | Inline in each test's Arrange phase |
+| `Background:`                     | Inline in each test's Arrange phase                 |

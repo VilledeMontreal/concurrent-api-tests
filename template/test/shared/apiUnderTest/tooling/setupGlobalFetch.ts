@@ -4,7 +4,10 @@ import { apiUnderTestConfig } from "./apiUnderTestConfig";
 const originalFetch = global.fetch;
 
 // Create a custom fetch that prepends the base URL for relative URLs
-const customFetch: typeof fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+const customFetch: typeof fetch = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => {
   let url: string;
 
   if (typeof input === "string") {
