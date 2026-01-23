@@ -1,0 +1,6 @@
+node_modules
+
+*.map
+*.js
+!/prettier.config.js
+/config/local.yaml
