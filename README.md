@@ -33,21 +33,21 @@ The core methodology. Covers data partitioning, test isolation, templates, fixtu
 graph TB
   %% Define reusable styles
   classDef default stroke:#00aa00,stroke-width:2px
+
+  A1["Test A (Run 1)<br/>keyword: 'run1-electronics'"]
+  A2["Test A (Run 2)<br/>keyword: 'run2-electronics'"]
   
-  A1["Test A (Run 1)<br/>id: 'e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'"]
-  B1["Test B (Run 1)<br/>id: 'f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'"]
-  
-  DB1[("Posts with<br/>id='e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'")]
-  DB2[("Posts with<br/>id='f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'")]
+  DB1[("Posts with<br/>keyword='run1-electronics'")]
+  DB2[("Posts with<br/>keyword='run2-electronics'")]
   
   A1 -->|Creates post| DB1
-  B1 -->|Creates post| DB2
+  A2 -->|Creates post| DB2
   
   A1 -.->|Finds <br/>ONLY its post| DB1
-  B1 -.->|Finds <br/>ONLY its post| DB2
-  
+  A2 -.->|Finds <br/>ONLY its post| DB2  
+
   %% Apply styles
-  class A1,B1,DB1,DB2 default
+  class A1,A2,DB1,DB2 default
 ```
 
 ## Getting started
