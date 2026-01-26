@@ -26,33 +26,44 @@ This approach has been validated across multiple projects with many contributors
 - **Understand the system by reading tests.** When you land on an unfamiliar feature, the tests show you how it actually works—not how someone hoped it would work six months ago.
 - **Stay in flow.** Run the full suite locally. Know within seconds of minutes—not hours—if your change broke something.
 
-## Documentation
-
-### [Concurrent API Testing Guide](doc/concurrent-api-testing-guide.md)
-**Production-ready** — The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. [Read the guide](doc/concurrent-api-testing-guide.md) to get started.
+## Concurrent API Testing Guide
+**Production-ready** — The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. [Read the guide](doc/concurrent-api-testing-guide.md).
 
 ```mermaid
 graph TB
   %% Define reusable styles
   classDef default stroke:#00aa00,stroke-width:2px
-  
+
   A1["Test A (Run 1)<br/>id: 'e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'"]
   B1["Test B (Run 1)<br/>id: 'f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'"]
-  
+
   DB1[("Posts with<br/>id='e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'")]
   DB2[("Posts with<br/>id='f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'")]
-  
+
   A1 -->|Creates post| DB1
   B1 -->|Creates post| DB2
-  
+
   A1 -.->|Finds <br/>ONLY its post| DB1
   B1 -.->|Finds <br/>ONLY its post| DB2
-  
+
   %% Apply styles
   class A1,B1,DB1,DB2 default
 ```
 
-### [Writing Tests with AI Agents](doc/writing-concurrent-api-tests-with-ai-agents.md)
+## Getting started
+
+The fastest way to start is to copy the [`template/`](template/) folder into your project:
+
+The template includes:
+- Dev container for consistent local setup
+- A working example with the main api test suite, api tests, fixtures, and templates.
+- Pre-configured Vitest with concurrent execution and flaky test reporting
+- [Orval](https://orval.dev/) integration for generating typed API clients from OpenAPI specs
+- Prompts for the [experimental AI-assisted workflow](doc/writing-concurrent-api-tests-with-ai-agents.md)
+
+See the [template README](template/README.md) for usage details.
+
+## Writing Tests with AI Agents
 **Experimental** — An incremental workflow using AI agents: natural language → Gherkin specifications → concurrent tests. Promising early results, not yet validated at scale. [Read more on writing concurrent API tests with AI agents](doc/writing-concurrent-api-tests-with-ai-agents.md)
 
 ```mermaid
