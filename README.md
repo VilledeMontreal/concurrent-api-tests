@@ -4,30 +4,28 @@
 
 **Your test suite shouldn't be the thing that slows you down.**
 
-Every team hits the same wall: unit tests pass, mocks are green, but production breaks anyway. The integration tests that actually catch real bugs? They're slow, flaky, and everyone's afraid to touch them. So you write fewer of them. And ship more bugs.
+Most team hits the same wall: unit tests pass, mocks are green, but production breaks anyway. The integration tests that actually catch real bugs? They're slow, flaky, and everyone's afraid to touch them. So you write fewer of them. And ship more bugs.
 
 **There's a better way.**
 
 Concurrent API testing lets you run hundreds of end-to-end tests in seconds—not by sacrificing thoroughness, but by designing tests that can safely run in parallel. No shared state. No flaky interdependencies. No "works on my machine."
 
-This approach has been battle-tested across multiple projects with many contributors, handling **1500+ API tests** that run reliably on every commit.
-
 ## Why Teams Adopt This
 
-| | Before | After |
-|---|--------|-------|
-| **Confidence** | Unit tests pass, production fails | Real bugs caught before merge |
-| **Stability** | Flaky tests ignored or deleted | Tests you actually trust |
-| **Speed** | "Full suite? Maybe tonight." | Full suite on every PR |
-| **Maintenance** | Shared fixtures, cascading failures | Isolated tests, local reasoning |
+This approach has been validated across multiple projects with many contributors, handling **1500+ API tests** that run reliably on every commit.
 
-## The Real Win Isn't Speed
+## Value for teams and leadership
 
-Yes, running tests concurrently is fast. But speed is a side effect.
+- **Ship with confidence.** Real integration coverage catches real bugs before they reach users.
+- **Sustainable quality.** Tests that work reliably get written and maintained. Tests that don't get ignored and deleted. Concurrent testing makes comprehensive coverage *sustainable*—not a luxury you defer until "later."
 
-The real value is that **isolation makes tests trustworthy**. When each test owns its data, you stop debugging phantom failures. You stop skipping tests "just for this PR." You stop treating your test suite as a liability.
 
-Concurrent testing makes comprehensive coverage *sustainable*—not a luxury you defer until "later."
+## Value for developers
+- Tests that are easy to read (and write)
+- Blackbox testing against the most stable part of the system. It's API. Allows to test the systeme as a whole. Also allows for large refactoring and lib ugpgrade to become easy.
+- Give context to understand the system as a whole. Reading the test is the place to start when you work on a feature you don't known.
+- **Run the full suite locally.** Parallel execution means you don't wait. You stay in flow.
+- **Faster feedback loops.** Developers know within minutes—not hours—if their change broke something.
 
 ## Documentation
 
