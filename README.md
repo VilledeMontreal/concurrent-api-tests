@@ -24,7 +24,7 @@ This approach has been validated across multiple projects with many contributors
 
 - **Change without fear.** You're testing against the API—the most stable contract in your system. Swap out libraries, restructure internals, upgrade dependencies. If the API behavior is preserved, your tests stay green.
 - **Understand the system by reading tests.** When you land on an unfamiliar feature, the tests show you how it actually works—not how someone hoped it would work six months ago.
-- **Stay in flow.** Run the full suite locally in seconds. Know within minutes—not hours—if your change broke something.
+- **Stay in flow.** Run the full suite locally. Know within seconds of minutes—not hours—if your change broke something.
 
 ## Documentation
 

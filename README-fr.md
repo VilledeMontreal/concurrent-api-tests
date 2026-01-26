@@ -10,24 +10,21 @@ Le scénario est connu : les tests unitaires passent, les mocks sont au vert, et
 
 Les tests API concurrents permettent de lancer des centaines de scénarios de bout en bout en quelques secondes. Le secret n'est pas la puissance brute, mais la conception : des tests isolés, sans état partagé, sans dépendances croisées, sans le fameux « ça fonctionne sur ma machine ».
 
-Cette approche a été éprouvée sur plusieurs projets avec de nombreux contributeurs, gérant **plus de 1500 tests API** qui s'exécutent de manière fiable à chaque commit.
+## Pourquoi les équipes adoptent cette approche
 
-## Ce que ça change concrètement
+Cette approche a été validée sur plusieurs projets avec de nombreux contributeurs, gérant **plus de 1500 tests API** qui s'exécutent de manière fiable à chaque commit.
 
-| | Avant | Après |
-|---|-------|-------|
-| **Confiance** | Tests verts, production cassée | Bugs détectés avant le merge |
-| **Fiabilité** | Tests instables ignorés ou désactivés | Une suite sur laquelle on peut compter |
-| **Rapidité** | « La suite complète ? On verra demain. » | Suite complète sur chaque PR |
-| **Maintenance** | Fixtures partagées, échecs en cascade | Tests autonomes, faciles à comprendre |
+### Pour les équipes et la direction
 
-## Au-delà de la vitesse
+- **Livrez en toute confiance.** Une vraie couverture d'intégration détecte les vrais bugs avant qu'ils n'atteignent les utilisateurs.
+- **Une approche pérenne.** Des tests fiables, on les écrit, on les maintient et on en bénéficie. Des tests instables, on finit par les ignorer puis les supprimer. Une couverture complète devient *soutenable* — pas un luxe qu'on repousse à « plus tard ».
+- **S'adapte à toute taille d'équipe.** Des patterns simples que tout développeur peut rapidement adopter. Les nouveaux membres écrivent leur premier test dès le premier jour.
 
-Oui, c'est rapide. Mais la rapidité n'est qu'un bénéfice secondaire.
+### Pour les développeurs
 
-La vraie valeur, c'est que **l'isolation rend les tests fiables**. Quand chaque test possède ses propres données, vous arrêtez de déboguer des échecs fantômes. Vous arrêtez de désactiver des tests « juste pour cette PR ». Vous arrêtez de traiter votre suite de tests comme un fardeau.
-
-Les tests concurrents rendent une couverture complète viable au quotidien pas un luxe qu'on reporte à « plus tard ».
+- **Changez sans crainte.** Vous testez contre l'API — le contrat le plus stable de votre système. Remplacez des librairies, restructurez l'interne, mettez à jour les dépendances. Si le comportement de l'API est préservé, vos tests restent au vert.
+- **Comprenez le système en lisant les tests.** Quand vous découvrez une fonctionnalité inconnue, les tests vous montrent comment elle fonctionne réellement — pas comment quelqu'un espérait qu'elle fonctionne il y a six mois.
+- **Restez dans le flow.** Lancez la suite complète en local en quelques secondes. Sachez en quelques secondes ou minutes — pas en heures — si votre changement a cassé quelque chose.
 
 ## Documentation
 
@@ -76,7 +73,7 @@ Mocha n'est plus recommandé pour implémenter les tests API concurrents. Voir l
 
 ## Licence et propriété intellectuelle
 
-Le code source de ce projet est libéré sous la licence [MIT License](LICENSE).
+Le code source de ce projet est distribué sous licence [MIT](LICENSE).
 
 ## Contribuer
 
@@ -84,4 +81,4 @@ Voir [CONTRIBUTING.md](CONTRIBUTING.md#comment-contribuer)
 
 ## Code de Conduite
 
-La participation à ce projet est réglementée par le [Code de Conduite](CODE_OF_CONDUCT.md#code-de-conduite)
+La participation à ce projet est encadrée par le [Code de Conduite](CODE_OF_CONDUCT.md#code-de-conduite).
