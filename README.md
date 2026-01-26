@@ -14,13 +14,13 @@ Concurrent API testing lets you run hundreds of end-to-end tests in seconds—no
 
 This approach has been validated across multiple projects with many contributors, handling **1500+ API tests** that run reliably on every commit.
 
-### For teams and leadership
+### Benefits for teams and leadership
 
 - **Ship with confidence.** Real integration coverage catches real bugs before they reach users.
-- **Sustainable quality.** Tests that work reliably get written and maintained. Tests that don't get ignored and deleted. Comprehensive coverage becomes *sustainable*—not a luxury you defer until "later."
+- **Sustainable quality.** The easier tests are to write and maintain, the more you invest in them—and the more you get back. Comprehensive coverage becomes *sustainable*—not a luxury you defer until "later."
 - **Scales with your team.** Simple patterns that any developer can pick up quickly. New team members write their first test on day one. 
 
-### For developers
+### Benefits for developers
 
 - **Change without fear.** You're testing against the API—the most stable contract in your system. Swap out libraries, restructure internals, upgrade dependencies. If the API behavior is preserved, your tests stay green.
 - **Understand the system by reading tests.** When you land on an unfamiliar feature, the tests show you how it actually works—not how someone hoped it would work six months ago.

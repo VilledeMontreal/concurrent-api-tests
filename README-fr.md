@@ -14,15 +14,15 @@ Les tests API concurrents permettent de lancer des centaines de scénarios de bo
 
 Cette approche a été validée sur plusieurs projets avec de nombreux contributeurs, gérant **plus de 1500 tests API** qui s'exécutent de manière fiable à chaque commit.
 
-### Pour les équipes et la direction
+### Bénéfices pour les équipes et la direction
 
 - **Livrez en toute confiance.** Une vraie couverture d'intégration détecte les vrais bugs avant qu'ils n'atteignent les utilisateurs.
-- **Une approche pérenne.** Des tests fiables, on les écrit, on les maintient et on en bénéficie. Des tests instables, on finit par les ignorer puis les supprimer. Une couverture complète devient *soutenable* — pas un luxe qu'on repousse à « plus tard ».
+- **Une approche pérenne.** Plus les tests sont fiables et facile à écrire/maintenir, plus on en tire profit. Une couverture complète devient *viable* — pas un luxe qu'on repousse à « plus tard ».
 - **S'adapte à toute taille d'équipe.** Des patterns simples que tout développeur peut rapidement adopter. Les nouveaux membres écrivent leur premier test dès le premier jour.
 
-### Pour les développeurs
+### Bénéfices pour les développeurs
 
-- **Changez sans crainte.** Vous testez contre l'API — le contrat le plus stable de votre système. Remplacez des librairies, restructurez l'interne, mettez à jour les dépendances. Si le comportement de l'API est préservé, vos tests restent au vert.
+- **Effectuez des changements sans crainte.** Vous testez contre l'API — le contrat le plus stable de votre système. Remplacez des librairies, restructurez l'interne, mettez à jour les dépendances. Si le comportement de l'API est préservé, vos tests restent au vert.
 - **Comprenez le système en lisant les tests.** Quand vous découvrez une fonctionnalité inconnue, les tests vous montrent comment elle fonctionne réellement — pas comment quelqu'un espérait qu'elle fonctionne il y a six mois.
 - **Restez dans le flow.** Lancez la suite complète en local en quelques secondes. Sachez en quelques secondes ou minutes — pas en heures — si votre changement a cassé quelque chose.
 
