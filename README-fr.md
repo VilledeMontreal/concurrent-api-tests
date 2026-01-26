@@ -26,10 +26,8 @@ Cette approche a été validée sur plusieurs projets avec de nombreux contribut
 - **Comprenez le système en lisant les tests.** Quand vous découvrez une fonctionnalité inconnue, les tests vous montrent comment elle fonctionne réellement — pas comment quelqu'un espérait qu'elle fonctionne il y a six mois.
 - **Restez dans le flow.** Lancez la suite complète en local en quelques secondes. Sachez en quelques secondes ou minutes — pas en heures — si votre changement a cassé quelque chose.
 
-## Documentation
-
-### [Guide des tests API concurrents](doc/concurrent-api-testing-guide.md)
-**Prêt pour la production** — La méthodologie de base. Couvre le partitionnement des données, l'isolation des tests, les templates, les fixtures, et tout ce dont vous avez besoin pour écrire des tests concurrents fiables. [Lire le guide](doc/concurrent-api-testing-guide.md) pour commencer.
+## Guide des tests API concurrents
+La méthodologie de base. Couvre le partitionnement des données, l'isolation des tests, les templates, les fixtures, et tout ce dont vous avez besoin pour écrire des tests concurrents fiables. [Lire le guide](doc/concurrent-api-testing-guide.md).
 
 ```mermaid
 graph TB
@@ -52,8 +50,21 @@ graph TB
   class A1,B1,DB1,DB2 default
 ```
 
-### [Écrire des tests avec des agents IA](doc/writing-concurrent-api-tests-with-ai-agents.md)
-**Expérimental** — Un workflow incrémental utilisant des agents IA : langage naturel → spécifications Gherkin → tests concurrents. Résultats préliminaires prometteurs, pas encore validé à grande échelle. [En savoir plus](doc/writing-concurrent-api-tests-with-ai-agents.md)
+## Démarrage rapide
+
+Pour commencer, copiez le dossier [`template/`](template/) dans votre projet.
+
+Le template contient :
+- Un Dev Container pour un environnement local homogène
+- Un exemple fonctionnel avec une suite principale de tests API, des tests d'API, des fixtures et des templates
+- Vitest préconfiguré pour l'exécution concurrente et le signalement des tests instables
+- L'intégration d'[Orval](https://orval.dev/) pour générer des clients API typés à partir de spécifications OpenAPI
+- Des prompts pour le [workflow expérimental assisté par IA](doc/writing-concurrent-api-tests-with-ai-agents.md)
+
+Consultez le [README du template](template/README.md) pour les détails d'utilisation.
+
+## Écrire des tests avec des agents IA
+**Expérimental** — Un workflow incrémental utilisant des agents IA : langage naturel → spécifications Gherkin → tests concurrents. Résultats préliminaires prometteurs, pas encore validé à grande échelle. [En savoir plus](doc/writing-concurrent-api-tests-with-ai-agents.md).
 
 ```mermaid
 graph LR

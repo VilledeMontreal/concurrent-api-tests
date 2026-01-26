@@ -27,25 +27,25 @@ This approach has been validated across multiple projects with many contributors
 - **Stay in flow.** Run the full suite locally. Know within seconds of minutes—not hours—if your change broke something.
 
 ## Concurrent API Testing Guide
-**Production-ready** — The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. [Read the guide](doc/concurrent-api-testing-guide.md).
+The core methodology. Covers data partitioning, test isolation, templates, fixtures, and everything you need to write reliable concurrent tests. [Read the guide](doc/concurrent-api-testing-guide.md).
 
 ```mermaid
 graph TB
   %% Define reusable styles
   classDef default stroke:#00aa00,stroke-width:2px
-
+  
   A1["Test A (Run 1)<br/>id: 'e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'"]
   B1["Test B (Run 1)<br/>id: 'f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'"]
-
+  
   DB1[("Posts with<br/>id='e6ee28c3-a3e1-43c5-9e9d-8da6c5b7023f'")]
   DB2[("Posts with<br/>id='f7ce98ac-a9e6-4f30-9373-c1e08dbac9b9'")]
-
+  
   A1 -->|Creates post| DB1
   B1 -->|Creates post| DB2
-
+  
   A1 -.->|Finds <br/>ONLY its post| DB1
   B1 -.->|Finds <br/>ONLY its post| DB2
-
+  
   %% Apply styles
   class A1,B1,DB1,DB2 default
 ```
