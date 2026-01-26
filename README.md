@@ -4,7 +4,7 @@
 
 **Your test suite shouldn't be the thing that slows you down.**
 
-Most team hits the same wall: unit tests pass, mocks are green, but production breaks anyway. The integration tests that actually catch real bugs? They're slow, flaky, and everyone's afraid to touch them. So you write fewer of them. And ship more bugs.
+Most teams hit the same wall: unit tests pass, mocks are green, but production breaks anyway. The integration tests that actually catch real bugs? They're slow, flaky, and everyone's afraid to touch them. So you write fewer of them. And ship more bugs.
 
 **There's a better way.**
 
@@ -14,18 +14,17 @@ Concurrent API testing lets you run hundreds of end-to-end tests in seconds—no
 
 This approach has been validated across multiple projects with many contributors, handling **1500+ API tests** that run reliably on every commit.
 
-## Value for teams and leadership
+### For teams and leadership
 
 - **Ship with confidence.** Real integration coverage catches real bugs before they reach users.
-- **Sustainable quality.** Tests that work reliably get written and maintained. Tests that don't get ignored and deleted. Concurrent testing makes comprehensive coverage *sustainable*—not a luxury you defer until "later."
+- **Sustainable quality.** Tests that work reliably get written and maintained. Tests that don't get ignored and deleted. Comprehensive coverage becomes *sustainable*—not a luxury you defer until "later."
+- **Scales with your team.** Simple patterns that any developer can pick up quickly. New team members write their first test on day one. 
 
+### For developers
 
-## Value for developers
-- Tests that are easy to read (and write)
-- Blackbox testing against the most stable part of the system. It's API. Allows to test the systeme as a whole. Also allows for large refactoring and lib ugpgrade to become easy.
-- Give context to understand the system as a whole. Reading the test is the place to start when you work on a feature you don't known.
-- **Run the full suite locally.** Parallel execution means you don't wait. You stay in flow.
-- **Faster feedback loops.** Developers know within minutes—not hours—if their change broke something.
+- **Change without fear.** You're testing against the API—the most stable contract in your system. Swap out libraries, restructure internals, upgrade dependencies. If the API behavior is preserved, your tests stay green.
+- **Understand the system by reading tests.** When you land on an unfamiliar feature, the tests show you how it actually works—not how someone hoped it would work six months ago.
+- **Stay in flow.** Run the full suite locally in seconds. Know within minutes—not hours—if your change broke something.
 
 ## Documentation
 
@@ -82,4 +81,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Code of Conduct
 
-Participation in this poject is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+Participation in this project is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).

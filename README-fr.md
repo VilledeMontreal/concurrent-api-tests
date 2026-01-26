@@ -8,7 +8,7 @@ Le scénario est connu : les tests unitaires passent, les mocks sont au vert, et
 
 **On peut faire autrement.**
 
-Les tests API concurrents permettent de lancer des centaines de scénarios de bout en bout en quelques secondes. Le secret n'est pas la puissance brute, mais la conception : des tests isolés, sans état partagé, sans dépendances croisées, sans le fameux « chez moi ça marche ».
+Les tests API concurrents permettent de lancer des centaines de scénarios de bout en bout en quelques secondes. Le secret n'est pas la puissance brute, mais la conception : des tests isolés, sans état partagé, sans dépendances croisées, sans le fameux « ça fonctionne sur ma machine ».
 
 Cette approche a été éprouvée sur plusieurs projets avec de nombreux contributeurs, gérant **plus de 1500 tests API** qui s'exécutent de manière fiable à chaque commit.
 
