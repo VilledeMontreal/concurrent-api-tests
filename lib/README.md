@@ -6,6 +6,26 @@ In your project, run this npm command:
 
 ## Concurrent API Test Functions
 
+### aFewSeconds
+
+Some test cases must rely on the timing between API requests. These test cases are likely to be [flaky](https://hackernoon.com/flaky-tests-a-war-that-never-ends-9aa32fdef359) if the timing is not managed with care.
+
+If the precision of the timing has to be less than a second, then concurrent-api-tests is not the right tool for this test case.
+
+**Arguments**
+
+- delayInSeconds: The number of seconds to wait for. (Ex: 5).
+
+**Returns**
+
+void
+
+**Example**
+
+`await aFewSeconds(5);`
+
+---
+
 ### defineCopyTemplate
 
 Define a function that provide a default payload template and that allow to specify only the parts of the payload that are meaningful for the test case. This way, test cases are easier to read since only the parts that matter are specified. Moreover, if a change in a payload is required, only the default payload template and the related tests need to be changed.
@@ -76,97 +96,6 @@ const request = copyTechBlogPostTemplate((x) => {
   x.title = "Tech Article";
 });
 // request.category is already "tech"
-```
-
----
-
-### shouldThrow
-
-Assert against an API request that is expected to throw an error.
-
-**Arguments**
-
-- act: A function that send the API request.
-- customAssert: A function that assert against the error.
-
-**Returns**
-
-void
-
-**Example**
-
-```typescript
-import { shouldThrow } from "@villedemontreal/concurrent-api-tests";
-import { assert } from "chai";
-
-it("Title is required", async () => {
-  const request = copyBlogPostTemplate((x) => {
-    x.title = null;
-  });
-
-  await shouldThrow(
-    () => postBlogPost(request),
-    (err) => {
-      assert.strictEqual(err.status, 400);
-      assert.include(err.message, "title");
-    }
-  );
-});
-```
-
----
-
-### aFewSeconds
-
-Some test cases must rely on the timing between API requests. These test cases are likely to be [flaky](https://hackernoon.com/flaky-tests-a-war-that-never-ends-9aa32fdef359) if the timing is not managed with care.
-
-If the precision of the timing has to be less than a second, then concurrent-api-tests is not the right tool for this test case.
-
-**Arguments**
-
-- delayInSeconds: The number of seconds to wait for. (Ex: 5).
-
-**Returns**
-
-void
-
-**Example**
-
-`await aFewSeconds(5);`
-
----
-
-### getTestRunId
-
-Get a unique identifier for the current test run. This identifier is used to partition data between concurrent test runs, ensuring test isolation.
-
-The identifier is prefixed with `zApiTest-` followed by a UUID. The `z` prefix ensures that data created by API tests appears at the end of alphabetically sorted lists, making it easier to distinguish test data from manually created data.
-
-**Arguments**
-
-None.
-
-**Returns**
-
-A unique string identifier for the current test run (e.g., `zApiTest-550e8400-e29b-41d4-a716-446655440000`).
-
-**Example**
-
-```typescript
-import { getTestRunId } from "@villedemontreal/concurrent-api-tests";
-
-it("Search blog posts by keyword", async () => {
-  // Use getTestRunId() to create a unique keyword for this test run
-  const keyword = `${getTestRunId()}-testing`;
-
-  // Create posts with the partitioned keyword
-  await postBlogPost({ title: "Post 1", keywords: [keyword] });
-  await postBlogPost({ title: "Post 2", keywords: [keyword] });
-
-  // Search only returns posts from this test run
-  const results = await getBlogPosts(keyword);
-  assert.strictEqual(results.length, 2);
-});
 ```
 
 ---
@@ -260,6 +189,79 @@ it("Admin can delete blog post", async () => {
   // Different key, so authenticates separately from "editor"
 });
 ```
+
+---
+
+### getTestRunId
+
+Get a unique identifier for the current test run. This identifier is used to partition data between concurrent test runs, ensuring test isolation.
+
+The identifier is prefixed with `zApiTest-` followed by a UUID. The `z` prefix ensures that data created by API tests appears at the end of alphabetically sorted lists, making it easier to distinguish test data from manually created data.
+
+**Arguments**
+
+None.
+
+**Returns**
+
+A unique string identifier for the current test run (e.g., `zApiTest-550e8400-e29b-41d4-a716-446655440000`).
+
+**Example**
+
+```typescript
+import { getTestRunId } from "@villedemontreal/concurrent-api-tests";
+
+it("Search blog posts by keyword", async () => {
+  // Use getTestRunId() to create a unique keyword for this test run
+  const keyword = `${getTestRunId()}-testing`;
+
+  // Create posts with the partitioned keyword
+  await postBlogPost({ title: "Post 1", keywords: [keyword] });
+  await postBlogPost({ title: "Post 2", keywords: [keyword] });
+
+  // Search only returns posts from this test run
+  const results = await getBlogPosts(keyword);
+  assert.strictEqual(results.length, 2);
+});
+```
+
+---
+
+### shouldThrow
+
+Assert against an API request that is expected to throw an error.
+
+**Arguments**
+
+- act: A function that send the API request.
+- customAssert: A function that assert against the error.
+
+**Returns**
+
+void
+
+**Example**
+
+```typescript
+import { shouldThrow } from "@villedemontreal/concurrent-api-tests";
+import { assert } from "chai";
+
+it("Title is required", async () => {
+  const request = copyBlogPostTemplate((x) => {
+    x.title = null;
+  });
+
+  await shouldThrow(
+    () => postBlogPost(request),
+    (err) => {
+      assert.strictEqual(err.status, 400);
+      assert.include(err.message, "title");
+    }
+  );
+});
+```
+
+---
 
 ### FlakyTestReporter
 

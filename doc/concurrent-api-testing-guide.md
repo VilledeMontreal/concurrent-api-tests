@@ -772,11 +772,11 @@ If your tests have strict timing requirements or race conditions you must precis
 
 | Utility | Purpose |
 |---------|---------|
+| [`aFewSeconds()`](../lib/README.md#afewseconds) | Delay (avoid; ask before using) |
 | [`defineCopyTemplate()`](../lib/README.md#definecopytemplate) | Create request templates with valid defaults |
 | [`defineCopyTemplateVariation()`](../lib/README.md#definecopytemplatevariation) | Extend a template (use only if reused 5+ times) |
-| [`shouldThrow()`](../lib/README.md#shouldthrow) | Assert that an action throws an HTTP error |
-| [`aFewSeconds()`](../lib/README.md#afewseconds) | Delay (avoid; ask before using) |
-| [`getTestRunId()`](../lib/README.md#gettestrunid) | Get unique prefix for data partition fields |
 | [`defineGetSharedFixture()`](../lib/README.md#definegetsharedfixture) | Share immutable data across tests |
 | [`defineGetSharedFixtureByKey()`](../lib/README.md#definegetsharedfixturebykey) | Share immutable data by key (e.g., user by role) |
+| [`getTestRunId()`](../lib/README.md#gettestrunid) | Get unique prefix for data partition fields |
+| [`shouldThrow()`](../lib/README.md#shouldthrow) | Assert that an action throws an HTTP error |
 | [`FlakyTestReporter`](../lib/README.md#flakytestreporter) | Automatically detect and report flaky tests with complete error log |
