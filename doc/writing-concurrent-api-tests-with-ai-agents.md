@@ -83,11 +83,7 @@ This approach works because:
 
 ---
 
-## The Two Prompts
-
-This workflow uses two specialized prompts that guide AI agents:
-
-### Prompt 1: `/gherkin-from-text`
+## Prompt 1: `/gherkin-from-text`
 
 **Purpose:** Transform natural language ideas into formal Gherkin specifications.
 
@@ -100,7 +96,7 @@ This workflow uses two specialized prompts that guide AI agents:
 
 **What it produces:** One `.feature` file per feature, containing business rules and examples.
 
-### Prompt 2: `/concurrent-api-test-from-gherkin`
+## Prompt 2: `/concurrent-api-test-from-gherkin`
 
 **Purpose:** Generate concurrent API tests from Gherkin specifications.
 
