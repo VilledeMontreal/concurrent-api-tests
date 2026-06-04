@@ -240,11 +240,11 @@ dataPartitions:
 
 **Fields explained:**
 
-| Field | Description |
-|-------|-------------|
-| `type` | Either `server-generated` (automatic isolation), `client-controlled` (you must ensure uniqueness), or `stateless` (no partition needed) |
-| `field` | The name of the field used for partitioning (not applicable for stateless) |
-| `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` (not applicable for stateless) |
+| Field      | Description                                                                                                                             |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`     | Either `server-generated` (automatic isolation), `client-controlled` (you must ensure uniqueness), or `stateless` (no partition needed) |
+| `field`    | The name of the field used for partitioning (not applicable for stateless)                                                              |
+| `location` | Where the field exists: `response.body`, `query`, `path`, or `request.body` (not applicable for stateless)                              |
 
 #### How to Use It
 
@@ -430,31 +430,47 @@ it("Create blog post with custom title", async () => {
 
 The minimal version is clearer, faster to write, and more maintainable. If unrelated fields break, the test shouldn't fail—that's what other tests are for.
 
-### Don't assert on template defaults
+### Don't rely on specific default values
 
 Always override fields to meaningful values before asserting on them. This makes tests explicit, prevents failures when defaults change, and makes debugging easier:
 
 ```typescript
 // ❌ Anti-pattern — asserting on default template values
-it("Create blog post with title", async () => {
-  const request = copyBlogPostTemplate(); // Uses titleDefault
+it("Create blog post with empty title", async () => {
+  const request = copyBlogPostTemplate(); // Uses titleDefault assuming its empty
 
   const actual = await postBlogPost(request);
 
-  assert.strictEqual(actual.title, "titleDefault"); // Brittle, unclear intent
+  assert.strictEqual(actual.title, ""); // Brittle, unclear intent
 });
 
 // ✅ Correct — explicit meaningful value
-it("Create blog post with title", async () => {
+it("Create blog post with empty title", async () => {
   const request = copyBlogPostTemplate((x) => {
-    x.title = "A meaningful title"; // Clear what we're testing
+    x.title = ""; // Clear what we're testing
   });
 
   const actual = await postBlogPost(request);
 
-  assert.strictEqual(actual.title, "A meaningful title"); // Clear expectation
+  assert.strictEqual(actual.title, ""); // Clear expectation
 });
 ```
+
+If the specific value doesn't matter and you just want to ensure it stays the same, testing against the template default is fine.
+
+```typescript
+// ✅ Correct — specific value doesn't matter
+it("Create blog post initialize title from request", async () => {
+  const request = copyBlogPostTemplate();
+
+  const actual = await postBlogPost(request);
+
+  assert.strictEqual(actual.title, request.title); // Intent is only on same value
+});
+```
+
+
+
 
 ### Use Explicit Expected Values
 
@@ -519,11 +535,11 @@ assert.strictEqual(fetched.id, created.id);
 
 ### Don't Over-Assert
 
-| Do | Don't |
-|----|-------|
-| Assert behavior-relevant attributes | Assert every returned field |
-| Assert status + message on errors | Assert status code on success (2xx) |
-| Let OpenAPI validate types | Manually check types are correct |
+| Do                                  | Don't                               |
+| ----------------------------------- | ----------------------------------- |
+| Assert behavior-relevant attributes | Assert every returned field         |
+| Assert status + message on errors   | Assert status code on success (2xx) |
+| Let OpenAPI validate types          | Manually check types are correct    |
 
 
 ## Fixtures: Reusable Test Helpers
@@ -622,15 +638,15 @@ export const getJwtTokenFor = defineGetSharedFixtureByKey<UserRole, JwtToken>(
 
 ## What to Avoid
 
-| Practice | Why It's Prohibited |
-|----------|---------------------|
-| Setup/teardown hooks | Break test isolation; create hidden dependencies |
-| Shared mutable state | Causes race conditions between concurrent tests |
-| Test ordering dependencies | Tests must pass in any order |
-| Direct database access | Breaks black-box principle; couples tests to implementation |
-| Wait times (`setTimeout`) | Flaky; hides real synchronization issues |
-| Over-specifying arrange | Obscures test intent; makes maintenance harder |
-| Over-asserting | Tests fail for irrelevant reasons; harder to debug |
+| Practice                   | Why It's Prohibited                                         |
+| -------------------------- | ----------------------------------------------------------- |
+| Setup/teardown hooks       | Break test isolation; create hidden dependencies            |
+| Shared mutable state       | Causes race conditions between concurrent tests             |
+| Test ordering dependencies | Tests must pass in any order                                |
+| Direct database access     | Breaks black-box principle; couples tests to implementation |
+| Wait times (`setTimeout`)  | Flaky; hides real synchronization issues                    |
+| Over-specifying arrange    | Obscures test intent; makes maintenance harder              |
+| Over-asserting             | Tests fail for irrelevant reasons; harder to debug          |
 
 ## Test Structure
 
@@ -685,12 +701,12 @@ graph TB
 
 The `test/shared/apiUnderTest/` directory contains everything related to the API you're testing:
 
-| Path | Description |
-|------|-------------|
-| `open-api.yaml` | **Project-specific.** Your API's OpenAPI specification. Update this to match your API. |
-| `data-partitions.yaml` | **Project-specific.** Documents the data partition strategy for each endpoint. Update this for your API. |
-| `generated/` | **Auto-generated.** API client generated from `open-api.yaml` by running `npm run generate-api-client`. Never edit manually. |
-| `tooling/` | **Provided by default.** Scripts for generating the API client. Works in most cases, but can be adapted to your project's needs. |
+| Path                   | Description                                                                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `open-api.yaml`        | **Project-specific.** Your API's OpenAPI specification. Update this to match your API.                                           |
+| `data-partitions.yaml` | **Project-specific.** Documents the data partition strategy for each endpoint. Update this for your API.                         |
+| `generated/`           | **Auto-generated.** API client generated from `open-api.yaml` by running `npm run generate-api-client`. Never edit manually.     |
+| `tooling/`             | **Provided by default.** Scripts for generating the API client. Works in most cases, but can be adapted to your project's needs. |
 
 ## Handling Flaky Tests
 
@@ -770,13 +786,13 @@ If your tests have strict timing requirements or race conditions you must precis
 
 ## Quick Reference
 
-| Utility | Purpose |
-|---------|---------|
-| [`aFewSeconds()`](../lib/README.md#afewseconds) | Delay (avoid; ask before using) |
-| [`defineCopyTemplate()`](../lib/README.md#definecopytemplate) | Create request templates with valid defaults |
-| [`defineCopyTemplateVariation()`](../lib/README.md#definecopytemplatevariation) | Extend a template (use only if reused 5+ times) |
-| [`defineGetSharedFixture()`](../lib/README.md#definegetsharedfixture) | Share immutable data across tests |
-| [`defineGetSharedFixtureByKey()`](../lib/README.md#definegetsharedfixturebykey) | Share immutable data by key (e.g., user by role) |
-| [`getTestRunId()`](../lib/README.md#gettestrunid) | Get unique prefix for data partition fields |
-| [`shouldThrow()`](../lib/README.md#shouldthrow) | Assert that an action throws an HTTP error |
-| [`FlakyTestReporter`](../lib/README.md#flakytestreporter) | Automatically detect and report flaky tests with complete error log |
+| Utility                                                                         | Purpose                                                             |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [`aFewSeconds()`](../lib/README.md#afewseconds)                                 | Delay (avoid; ask before using)                                     |
+| [`defineCopyTemplate()`](../lib/README.md#definecopytemplate)                   | Create request templates with valid defaults                        |
+| [`defineCopyTemplateVariation()`](../lib/README.md#definecopytemplatevariation) | Extend a template (use only if reused 5+ times)                     |
+| [`defineGetSharedFixture()`](../lib/README.md#definegetsharedfixture)           | Share immutable data across tests                                   |
+| [`defineGetSharedFixtureByKey()`](../lib/README.md#definegetsharedfixturebykey) | Share immutable data by key (e.g., user by role)                    |
+| [`getTestRunId()`](../lib/README.md#gettestrunid)                               | Get unique prefix for data partition fields                         |
+| [`shouldThrow()`](../lib/README.md#shouldthrow)                                 | Assert that an action throws an HTTP error                          |
+| [`FlakyTestReporter`](../lib/README.md#flakytestreporter)                       | Automatically detect and report flaky tests with complete error log |
